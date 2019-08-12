@@ -31,10 +31,11 @@ shinyUI(navbarPage('RealROC', theme = shinytheme("flatly"),
           # Main Panel
           mainPanel(
             tabsetPanel(
-              tabPanel('Datatable', dataTableOutput('filetable'))
+              tabPanel('Table', dataTableOutput('filetable'))
               )
             ))
           ),
+    
     tabPanel(title='2. Classic ROC',
              sidebarLayout(
                sidebarPanel(
@@ -57,5 +58,20 @@ shinyUI(navbarPage('RealROC', theme = shinytheme("flatly"),
                  )
                )
              )
+             ),
+    
+    tabPanel(title='3. AROC'
+             ),
+    
+    tabPanel(title='4. Comp2ROC'
+             ),
+    
+    tabPanel(title='5. Report'
+             ),
+    
+    tabPanel(title='Advance'
+             ),
+    
+    tabPanel(title='Help'
              )
 ))
