@@ -35,6 +35,27 @@ shinyUI(navbarPage('RealROC', theme = shinytheme("flatly"),
               )
             ))
           ),
-    tabPanel(title='2. Classic ROC'
+    tabPanel(title='2. Classic ROC',
+             sidebarLayout(
+               sidebarPanel(
+                 
+                 selectInput('classicurve_type','Select Curve Type', 
+                             choices=c('Empirical', 'Pooled Empirical', 'Pooled Bayesian')
+                             ),
+                 
+                 checkboxInput('smoother', 'Smooth Curve'),
+                 
+                 uiOutput("ROCcondicionals"),
+                 
+                 actionButton('gene_classic',"Plot Distributions")
+                 
+               ),
+               mainPanel(
+                 tabsetPanel(
+                   tabPanel('Curve Plot', plotOutput('roccurve')),
+                   tabPanel('Population Distribution')
+                 )
+               )
+             )
              )
 ))
