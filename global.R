@@ -1,4 +1,4 @@
-sapply(list('shiny','DT','AROC','shinythemes'), 
+sapply(list('shiny','DT','AROC','shinythemes','sm'), 
        function(x) library(x, character.only=T))
 
 autopooled <- function(data,testcol,resultcol,healthyRes,diseaseRes){
@@ -42,3 +42,14 @@ singlecontinualcovpepeanal <- function(Y_marker, covariate, result_col, result_t
   plot(aroc_analysis)
   print(summary(aroc_analysis$fit.h))
 }
+
+density_builder <- function(data,testcol,resultcol,color1=2,color2=3){
+  
+  sm::sm.density.compare(data[[testcol]],data[[resultcol]], 
+                         col=c(color1,color2), xlab=testcol)
+  legend('topright', legend = levels(as.factor(data[[resultcol]])), fill=c(2,3))
+  
+  
+}
+
+

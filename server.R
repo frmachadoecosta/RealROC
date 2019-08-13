@@ -25,10 +25,16 @@ shinyServer(function(input, output, session) {
   
   #---------
   observeEvent(input$gene_classic,{
-    updateTabsetPanel(session, 'ROCplot', selected = 'ROCplot')
+    #updateTabsetPanel(session, 'ROCplot', selected = 'ROCplot')
     roccurve <- autopooled(loadedData(), input$marker, input$resultcol, as.integer(input$healthy_pop), as.integer(input$disease_pop))
     output$roccurve <- renderPlot({plot(roccurve)
     })
+  })
+  
+  observeEvent(input$gene_classic, {
+    #dense_plot <- density_builder(loadedData(), input$marker, input$resultcol)
+    output$classic_density <- renderPlot({
+      density_builder(loadedData(), input$marker, input$resultcol)})
   })
   
   output$filetable <- DT::renderDataTable({

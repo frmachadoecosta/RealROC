@@ -54,7 +54,7 @@ shinyUI(navbarPage('RealROC', theme = shinytheme("flatly"),
                mainPanel(
                  tabsetPanel(
                    tabPanel('Curve Plot', plotOutput('roccurve')),
-                   tabPanel('Population Distribution')
+                   tabPanel('Population Distribution',plotOutput('classic_density'))
                  )
                )
              )
