@@ -60,7 +60,22 @@ shinyUI(navbarPage('RealROC', theme = shinytheme("flatly"),
              )
              ),
     
-    tabPanel(title='3. AROC'
+    tabPanel(title='3. AROC',
+             sidebarLayout(
+               sidebarPanel(
+                 selectInput('aroc_type','Curve Type', 
+                             choices=c('Semiparametric', 
+                                       'Nonparametric  Bayesian', 
+                                       'Semiparametric  Bayesian'))
+                 
+             ),
+             mainPanel(
+               tabsetPanel(
+                 tabPanel('AROC Curve'),
+                 tabPanel('Population Distribution')
+               )
+              )
+             )
              ),
     
     tabPanel(title='4. Comp2ROC'
