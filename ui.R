@@ -66,13 +66,16 @@ shinyUI(navbarPage('RealROC', theme = shinytheme("flatly"),
                  selectInput('aroc_type','Curve Type', 
                              choices=c('Semiparametric', 
                                        'Nonparametric  Bayesian', 
-                                       'Semiparametric  Bayesian'))
+                                       'Semiparametric  Bayesian')),
                  
+                 uiOutput('AROCcovariate'),
+                 
+                 actionButton('gene_aroc', 'Generate AROC')
              ),
              mainPanel(
                tabsetPanel(
-                 tabPanel('AROC Curve'),
-                 tabPanel('Population Distribution')
+                 tabPanel('AROC Curve', plotOutput('aroc')),
+                 tabPanel('Population Distribution',plotOutput('aroc_density'))
                )
               )
              )

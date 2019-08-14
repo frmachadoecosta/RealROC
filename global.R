@@ -1,4 +1,4 @@
-sapply(list('shiny','DT','AROC','shinythemes','sm'), 
+sapply(list('shiny','DT','AROC','shinythemes','sm','dplyr'), 
        function(x) library(x, character.only=T))
 
 autopooled <- function(data,testcol,resultcol,healthyRes,diseaseRes){
@@ -31,25 +31,34 @@ specnaomit <- function(col1, col2, df) {
   
 }
 
-singlecontinualcovpepeanal <- function(Y_marker, covariate, result_col, result_tag, df){
-  x <- specnaomit(covariate, Y_marker, df)
-  x2 <- x %>% select(Y_marker, covariate, result_col)
-  formula = paste(Y_marker,"~",covariate)
-  aroc_analysis <-  AROC.sp(formula.healthy = formula,
-                            group = result_col,
-                            tag.healthy = result_tag,
-                            data = x2)
-  plot(aroc_analysis)
-  print(summary(aroc_analysis$fit.h))
-}
 
-density_builder <- function(data,testcol,resultcol,color1=2,color2=3){
+density_builder <- function(data,testcol,resultcol,color1=3,color2=2){
   
   sm::sm.density.compare(data[[testcol]],data[[resultcol]], 
                          col=c(color1,color2), xlab=testcol)
-  legend('topright', legend = levels(as.factor(data[[resultcol]])), fill=c(2,3))
+  legend('topright', legend = levels(as.factor(data[[resultcol]])), fill=c(color1,color2))
   
   
 }
 
+gene_aroc_analysis <- function(data, testcol, resultcol, covcol, result_tag ){
+  x <- specnaomit(covcol, testcol, data)
+  x2 <- x %>% select(testcol, covcol, resultcol)
+  formula = paste(testcol,"~",covcol)
+  aroc_analysis <-  AROC.sp(formula.healthy = formula,
+                            group = resultcol,
+                            tag.healthy = result_tag,
+                            data = x2)
+  aroc_analysis
+}
+aroc_density_builder <- function(data,testcol,resultcol,covcol,color1=3,color2=2){
+  
+  resultcolfactor <- as.factor(data[[resultcol]])
+
+  
+  plot(data[[covcol]],data[[testcol]],
+       pch = c(16, 17)[resultcolfactor],  
+       col = c(color1,color2)[resultcolfactor])
+  legend('topright', legend = levels(resultcolfactor), fill=c(color1,color2))
+}
 

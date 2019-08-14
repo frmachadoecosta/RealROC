@@ -37,6 +37,29 @@ shinyServer(function(input, output, session) {
       density_builder(loadedData(), input$marker, input$resultcol)})
   })
   
+  #AROC Module
+  observeEvent(input$main,{
+    output$AROCcovariate <- renderUI({
+        selectInput('cov','Select Select Covariate ',
+                    multiple=TRUE, choices = names(loadedData()))
+      })
+    })
+  
+  observeEvent(input$gene_aroc, {
+    aroc_curve <- gene_aroc_analysis(loadedData(), input$marker, input$resultcol, input$cov, as.integer(input$healthy_pop))
+    
+    output$aroc <- renderPlot({plot(aroc_curve)})
+  })
+  
+  
+  observeEvent(input$gene_aroc, {
+  output$aroc_density <- renderPlot({
+    aroc_density_builder(loadedData(), input$marker, input$resultcol, input$cov)
+    })
+  })
+  
+  
+  
   output$filetable <- DT::renderDataTable({
     req(input$main)
     
