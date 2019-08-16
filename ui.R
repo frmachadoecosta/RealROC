@@ -89,7 +89,13 @@ shinyUI(navbarPage('RealROC', theme = shinytheme("flatly"),
     tabPanel(title='5. Report'
              ),
     
-    tabPanel(title='Advance'
+    tabPanel(title='Advanced',
+             sidebarLayout(
+               sidebarPanel(
+                 textInput('seed', 'Input Seed')
+               ),
+               mainPanel()
+             )
              ),
     
     tabPanel(title='Help'

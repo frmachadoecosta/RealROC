@@ -58,6 +58,8 @@ shinyServer(function(input, output, session) {
     })
   })
   
+  
+  
   observeEvent(input$main, {
     callModule(roccondi, "counter1",loadedData())
     callModule(roccondi, "counter2",loadedData())
