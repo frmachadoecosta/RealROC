@@ -46,7 +46,7 @@ shinyUI(navbarPage('RealROC', theme = shinytheme("flatly"),
                  
                  checkboxInput('smoother', 'Smooth Curve'),
                  
-                 uiOutput("ROCcondicionals"),
+                 roccondiButtons("counter1", "ROCParam Classic"),
                  
                  actionButton('gene_classic',"Plot Distributions")
                  
@@ -67,6 +67,8 @@ shinyUI(navbarPage('RealROC', theme = shinytheme("flatly"),
                              choices=c('Semiparametric', 
                                        'Nonparametric  Bayesian', 
                                        'Semiparametric  Bayesian')),
+                 
+                 roccondiButtons("counter2", "ROCParam Cov"),
                  
                  uiOutput('AROCcovariate'),
                  

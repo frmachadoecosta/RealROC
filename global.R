@@ -58,7 +58,31 @@ aroc_density_builder <- function(data,testcol,resultcol,covcol,color1=3,color2=2
   
   plot(data[[covcol]],data[[testcol]],
        pch = c(16, 17)[resultcolfactor],  
-       col = c(color1,color2)[resultcolfactor])
+       col = c(color1,color2)[resultcolfactor],
+       xlab = covcol, ylab = testcol)
   legend('topright', legend = levels(resultcolfactor), fill=c(color1,color2))
 }
+
+roccondiButtons <- function(id, label = "ROCParam") {
+  ns <- NS(id)
+  uiOutput(ns("roccondicionals"), label = label)
+  
+}
+
+roccondi <- function(input, output, session,ndata) {
+    output$roccondicionals <- renderUI({
+      tagList(
+        selectInput('marker','Select Marker or Test ',
+                    multiple=FALSE, choices = names(ndata)),
+        selectInput('resultcol','Select Result Column',
+                    multiple=FALSE, choices = names(ndata)),
+        textInput('healthy_pop','Select Healthy Value'),
+        textInput('disease_pop','Select Disease Value')
+      )
+      })
+}
+
+
+
+
 

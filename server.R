@@ -10,18 +10,18 @@ shinyServer(function(input, output, session) {
   
   
   #Classic ROC UI generation
-  observeEvent(input$main,{
-    output$ROCcondicionals <- renderUI({
-      tagList(
-        selectInput('marker','Select Marker or Test ',
-                    multiple=FALSE, choices = names(loadedData())),
-        selectInput('resultcol','Select Result Column',
-                    multiple=FALSE, choices = names(loadedData())),
-        textInput('healthy_pop','Select Healthy Value'),
-        textInput('disease_pop','Select Disease Value')
-      )
-    })
-  })
+  #observeEvent(input$main,{
+  #  output$ROCcondicionals <- renderUI({
+  #    tagList(
+  #      selectInput('marker','Select Marker or Test ',
+  #                  multiple=FALSE, choices = names(loadedData())),
+  #      selectInput('resultcol','Select Result Column',
+  #                  multiple=FALSE, choices = names(loadedData())),
+  #      textInput('healthy_pop','Select Healthy Value'),
+  #      textInput('disease_pop','Select Disease Value')
+  #    )
+  #  })
+  #})
   
   #---------
   observeEvent(input$gene_classic,{
@@ -58,7 +58,10 @@ shinyServer(function(input, output, session) {
     })
   })
   
-  
+  observeEvent(input$main, {
+    callModule(roccondi, "counter1",loadedData())
+    callModule(roccondi, "counter2",loadedData())
+    })
   
   output$filetable <- DT::renderDataTable({
     req(input$main)
