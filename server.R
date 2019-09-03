@@ -1,14 +1,16 @@
 shinyServer(function(input, output, session) {
-  loadedData <- reactive({
-    read.csv(
+  
+  loadedData <- reactiveVal()
+  
+  observe({
+    req(input$main$datapath) # make sure variable isn't empty
+    loadedData(read.csv( # initialize reactiveVal
       input$main$datapath,
       header = input$header,
       sep = input$sep,
-      quote = input$quote
-    )
+      quote = input$quote)) 
   })
-  
-  
+
   #Classic ROC UI generation
   #observeEvent(input$main,{
   #  output$ROCcondicionals <- renderUI({
@@ -63,7 +65,23 @@ shinyServer(function(input, output, session) {
   observeEvent(input$main, {
     callModule(roccondi, "counter1",loadedData())
     callModule(roccondi, "counter2",loadedData())
+    
+    #----Advanced
+    output$advancedsignalchange <- renderUI({
+      tagList(
+        selectInput('signalchangecolumn', 'Signal Change Column', choices = names(loadedData())),
+        actionButton('signalchange','Submit signal change')
+      )
+      
     })
+    })
+  
+  observeEvent(input$signalchange, {
+    aa <- as.array(input$signalchangecolumn)
+    tmp <- loadedData()
+    tmp[aa] <- tmp[aa] * -1
+    loadedData(tmp) # update reactiveVal
+  })
   
   output$filetable <- DT::renderDataTable({
     req(input$main)

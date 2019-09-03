@@ -92,12 +92,14 @@ shinyUI(navbarPage('RealROC', theme = shinytheme("flatly"),
     tabPanel(title='Advanced',
              sidebarLayout(
                sidebarPanel(
-                 textInput('seed', 'Input Seed')
+                 textInput('seed', 'Input Seed'),
+                 uiOutput('advancedsignalchange')
                ),
                mainPanel()
              )
              ),
     
-    tabPanel(title='Help'
+    tabPanel(title='Help',
+             'This section is reserved for documentation and is under construction'
              )
 ))

@@ -82,6 +82,12 @@ roccondi <- function(input, output, session,ndata) {
       })
 }
 
+changetestdirection <- function(data, col){
+  
+  data[col] <- data[col]*(-1)
+
+  data
+}
 
 
 
