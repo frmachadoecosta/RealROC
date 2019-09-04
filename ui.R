@@ -83,7 +83,20 @@ shinyUI(navbarPage('RealROC', theme = shinytheme("flatly"),
              )
              ),
     
-    tabPanel(title='4. Comp2ROC'
+    tabPanel(title='4. Comparison',
+             sidebarLayout(
+               sidebarPanel(
+               radioButtons('comptype','Select Comparison', choices = c('AROC','Comp2ROC')),
+               tagList(
+               roccondiButtons("counter3", "ROCParam Classic"),
+               uiOutput('AROCcovariatecomp'),
+               actionButton('compOnAROC','See Comparison'))
+               ),
+             mainPanel(
+               plotOutput('AROCcompplot')
+             )
+             )
+             
              ),
     
     tabPanel(title='5. Report'

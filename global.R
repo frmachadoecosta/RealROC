@@ -82,11 +82,35 @@ roccondi <- function(input, output, session,ndata) {
       })
 }
 
-changetestdirection <- function(data, col){
+compAROC_ggplot <- function(obj1, obj2, plottitle, leged1, leged2){
+  library(ggplot2)
+  p <- seq(0, 1, l = 101)
   
-  data[col] <- data[col]*(-1)
-
-  data
+  df <- data.frame(Approach = rep(c(leged1, leged2), each = length(p)), x = rep(p, 2),
+                   y = c(obj1$ROC[,1], obj2$ROC[,1]),
+                   
+                   ql = c(obj1$ROC[,2], obj2$ROC[,2]),
+                   
+                   qh = c(obj1$ROC[,3], obj2$ROC[,3])
+  )
+  
+  
+  g0 <- ggplot(df, aes(x = x, y = y, ymin = ql, ymax = qh)) +
+    geom_line(aes(colour = Approach, linetype = Approach), size = 1) +
+    scale_color_manual(values = c("#F8766D", "#7CAE00")) +
+    geom_ribbon(aes(fill = Approach), alpha = 0.2) +
+    scale_fill_manual(values = c("#F8766D", "#7CAE00")) +
+    scale_linetype_manual(values=c("dashed", "dotdash")) +
+    guides(colour=guide_legend(keywidth = 3, keyheight = 1)) +
+    labs(title = plottitle, x = "FPF", y = "TPF") +
+    theme(legend.position = c(0.7, 0.15),
+          plot.title = element_text(hjust = 0.5, size = 20),
+          axis.text = element_text(size=20),
+          axis.title = element_text(size=20),
+          legend.title = element_text(size=15),
+          legend.text = element_text(size=15))
+  
+  g0
 }
 
 

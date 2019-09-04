@@ -83,6 +83,38 @@ shinyServer(function(input, output, session) {
     loadedData(tmp) # update reactiveVal
   })
   
+  observeEvent(input$comptype,{
+    if (input$comptype == 'AROC'){
+      tagList(
+        callModule(roccondi,'counter3',loadedData()),
+        output$AROCcovariatecomp <- 
+          renderUI(selectInput('cov','Select Select Covariate ',
+                    multiple=TRUE, choices = names(loadedData())))
+      )
+              
+    }
+    else print('ola')
+  })
+  
+  observeEvent(input$compOnAROC,{
+    AROCobj <- gene_aroc_analysis(loadedData(), 
+                                  input$marker, 
+                                  input$resultcol, 
+                                  input$cov, 
+                                  as.integer(input$healthy_pop))
+    
+    polROCobj <- autopooled(loadedData(), 
+                            input$marker, 
+                            input$resultcol, 
+                            as.integer(input$healthy_pop), 
+                            as.integer(input$disease_pop))
+ 
+    output$AROCcompplot <-renderPlot(compAROC_ggplot(AROCobj,polROCobj,'Title','AROC','ROC'))
+    
+  })
+  
+  
+  
   output$filetable <- DT::renderDataTable({
     req(input$main)
     
