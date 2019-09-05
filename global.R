@@ -1,4 +1,4 @@
-sapply(list('shiny','DT','AROC','shinythemes','sm','dplyr'), 
+sapply(list('shiny','DT','AROC','shinythemes','sm','dplyr','npROCRegression'), 
        function(x) library(x, character.only=T))
 
 autopooled <- function(data,testcol,resultcol,healthyRes,diseaseRes){

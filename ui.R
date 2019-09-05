@@ -26,7 +26,9 @@ shinyUI(navbarPage('RealROC', theme = shinytheme("flatly"),
                          choices = c(None = "",
                                      "Double Quote" = '"',
                                      "Single Quote" = "'"),
-                         selected = '"')
+                         selected = '"'),
+          
+            actionButton('sampledata', 'Use sample data')
           ),
       
           

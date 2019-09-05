@@ -1,6 +1,12 @@
+library('npROCRegression')
 shinyServer(function(input, output, session) {
   
   loadedData <- reactiveVal()
+  
+  observeEvent(input$sampledata,{
+    data('endosim')
+    loadedData(endosim)
+    })
   
   observe({
     req(input$main$datapath) # make sure variable isn't empty
@@ -40,7 +46,7 @@ shinyServer(function(input, output, session) {
   })
   
   #AROC Module
-  observeEvent(input$main,{
+  observeEvent({input$main|input$sampledata},{
     output$AROCcovariate <- renderUI({
         selectInput('cov','Select Select Covariate ',
                     multiple=TRUE, choices = names(loadedData()))
@@ -62,7 +68,7 @@ shinyServer(function(input, output, session) {
   
   
   
-  observeEvent(input$main, {
+  observeEvent({input$main|input$sampledata}, {
     callModule(roccondi, "counter1",loadedData())
     callModule(roccondi, "counter2",loadedData())
     
@@ -114,11 +120,12 @@ shinyServer(function(input, output, session) {
   })
   
   
-  
-  output$filetable <- DT::renderDataTable({
-    req(input$main)
-    
-    DT::datatable(loadedData())
+  observeEvent({input$main|input$sampledata},{
+    output$filetable <- DT::renderDataTable({
+      
+      DT::datatable(loadedData())
+    })
   })
+  
   
 })
