@@ -45,10 +45,10 @@ shinyUI(navbarPage('RealROC', theme = shinytheme("flatly"),
                sidebarPanel(
                  
                  selectInput('classicurve_type','Select Curve Type', 
-                             choices=c('Empirical', 'Pooled Empirical', 'Pooled Bayesian')
+                             choices=c('Empirical','Empirical Smooth', 'Pooled Empirical', 'Pooled Bayesian')
                              ),
                  
-                 checkboxInput('smoother', 'Smooth Curve'),
+                 #checkboxInput('smoother', 'Smooth Curve'),
                  
                  roccondiButtons("counter1", "ROCParam Classic"),
                  

@@ -1,7 +1,7 @@
-sapply(list('shiny','DT','AROC','shinythemes','sm','dplyr','npROCRegression'), 
+sapply(list('shiny','DT','AROC','shinythemes','sm','dplyr','npROCRegression','pROC'), 
        function(x) library(x, character.only=T))
 
-autopooled <- function(data,testcol,resultcol,healthyRes,diseaseRes){
+autopooled <- function(data,testcol,resultcol,healthyRes,diseaseRes,type){
   #missing NA treatment
   
   
@@ -11,9 +11,12 @@ autopooled <- function(data,testcol,resultcol,healthyRes,diseaseRes){
   negativeRes <- results[!positiveResIndex]
   
   
-  
-  AROC::pooledROC.emp(positiveRes, negativeRes)#,method = c("coutcome"))
-}
+  if (type == 'Pooled Empirical'){
+  res <- AROC::pooledROC.emp(positiveRes, negativeRes)#,method = c("coutcome"))
+  } else { res <- AROC::pooledROC.BB(positiveRes, negativeRes, B=100)}
+  res
+  }
+
 
 specnaomit <- function(col1, col2, df) {
   newdf <- df
@@ -113,6 +116,27 @@ compAROC_ggplot <- function(obj1, obj2, plottitle, leged1, leged2){
   g0
 }
 
+#check if any missing arguments
+values_inputed <- function(...){
+  x <- list(0,...)
+
+
+}
+
+# classic empirical curve
+empiricalcurve <- function(data,testcol,resultcol,healthyRes,diseaseRes){
+  
+  #print(data[[resultcol]])
+  
+  res <- roc(data[[resultcol]], data[[testcol]],
+      smoothed = TRUE,
+      # arguments for ci
+      ci=TRUE, ci.alpha=0.9, stratified=FALSE,
+      # arguments for plot
+      plot=TRUE, auc.polygon=TRUE, max.auc.polygon=TRUE, grid=TRUE,
+      print.auc=TRUE, show.thres=TRUE)
+  res
+}
 
 
 
