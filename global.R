@@ -44,14 +44,30 @@ density_builder <- function(data,testcol,resultcol,color1=3,color2=2){
   
 }
 
-gene_aroc_analysis <- function(data, testcol, resultcol, covcol, result_tag ){
+gene_aroc_analysis <- function(data, testcol, resultcol, covcol, result_tag, aroc_type ){
   x <- specnaomit(covcol, testcol, data)
   x2 <- x %>% select(testcol, covcol, resultcol)
   formula = paste(testcol,"~",covcol)
+  
+  if (aroc_type == 'Nonparametric Bayesian'){
+    
+    aroc_analysis <-  AROC.bnp(formula.healthy = formula,
+                              group = resultcol,
+                              tag.healthy = result_tag,
+                              data = x2)
+    
+  } else if (aroc_type == 'Semiparametric Bayesian'){
+    aroc_analysis <-  AROC.bsp(formula.healthy = formula,
+                              group = resultcol,
+                              tag.healthy = result_tag,
+                              data = x2)
+  } else{
+  
   aroc_analysis <-  AROC.sp(formula.healthy = formula,
                             group = resultcol,
                             tag.healthy = result_tag,
                             data = x2)
+  }
   aroc_analysis
 }
 aroc_density_builder <- function(data,testcol,resultcol,covcol,color1=3,color2=2){

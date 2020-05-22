@@ -82,14 +82,17 @@ shinyServer(function(input, output, session) {
   })
   
   observeEvent(input$gene_aroc, {
+    try(
     aroc_curve <-
       gene_aroc_analysis(
         loadedData(),
         input$marker,
         input$resultcol,
         input$cov,
-        as.integer(input$healthy_pop)
+        as.integer(input$healthy_pop),
+        input$aroc_type
       )
+    )
     
     output$aroc <- renderPlot({
       plot(aroc_curve)

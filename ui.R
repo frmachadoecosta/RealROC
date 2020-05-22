@@ -69,8 +69,8 @@ shinyUI(navbarPage('RealROC', theme = shinytheme("flatly"),
                sidebarPanel(
                  selectInput('aroc_type','Curve Type', 
                              choices=c('Semiparametric', 
-                                       'Nonparametric  Bayesian', 
-                                       'Semiparametric  Bayesian')),
+                                       'Nonparametric Bayesian', 
+                                       'Semiparametric Bayesian')),
                  
                  roccondiButtons("counter2", "ROCParam Cov"),
                  
