@@ -1,4 +1,4 @@
-sapply(list('shiny','DT','AROC','shinythemes','sm','dplyr','npROCRegression','pROC'), 
+sapply(list('shiny','DT','AROC','shinythemes','sm','dplyr','npROCRegression','pROC', 'Comp2ROC'), 
        function(x) library(x, character.only=T))
 
 autopooled <- function(data,testcol,resultcol,healthyRes,diseaseRes,type){
@@ -152,6 +152,45 @@ empiricalcurve <- function(data,testcol,resultcol,healthyRes,diseaseRes){
       plot=TRUE, auc.polygon=TRUE, max.auc.polygon=TRUE, grid=TRUE,
       print.auc=TRUE, show.thres=TRUE)
   res
+}
+
+# ----- Comp Module functions
+
+comp_converter <- function(df1,df2,rescol1,rescol2, related){
+  
+  if(length(df1)==2 && length(df2==2)){
+    
+    var1 <- names(df1)[names(df1)!=rescol1]
+    var2 <- names(df2)[names(df2)!=rescol2]
+    
+    list1 <- df1[order(df1[[rescol1]]),]
+    list2 <- df2[order(df2[[rescol2]]),]
+    
+    
+    listall <- list(
+      list1[[var1]] , 
+      list1[[rescol1]] ,
+      list2[[var2]] , 
+      list2[[rescol2]] 
+    )
+    
+    var1n <- paste(var1,'1',sep='_')
+    var2n <- paste(var2,'2',sep='_')
+    rescol1n <- paste(rescol1,'1',sep = '_')
+    rescol2n <- paste(rescol2,'2',sep = '_')
+    
+    names(listall) <- c(var1n, rescol1n, var2n, rescol2n)
+    
+    
+    comp2rocdata <- read.manually.introduced(listall,
+                                             modality1=var1n, testdirection1=TRUE, 
+                                             modality2=var2n,testdirection2=TRUE, 
+                                             status1=rescol1n, related = related, status2 = rescol2n)
+    
+    
+  }else {stop('Dataframes must have 2 columns each')}
+  
+  
 }
 
 

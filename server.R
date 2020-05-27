@@ -113,6 +113,8 @@ shinyServer(function(input, output, session) {
     callModule(roccondi, "counter1", loadedData())
     callModule(roccondi, "counter2", loadedData())
     
+
+    
     #----Advanced
     output$advancedsignalchange <- renderUI({
       tagList(
@@ -134,6 +136,8 @@ shinyServer(function(input, output, session) {
     loadedData(tmp) # update reactiveVal
   })
   
+  #------- Comp Module
+  
   observeEvent(input$comptype, {
     if (input$comptype == 'AROC') {
       tagList(
@@ -142,7 +146,7 @@ shinyServer(function(input, output, session) {
           renderUI(
             selectInput(
               'cov',
-              'Select Select Covariate ',
+              'Select Covariate ',
               multiple = TRUE,
               choices = names(loadedData())
             )
@@ -151,28 +155,76 @@ shinyServer(function(input, output, session) {
       
     }
     else
-      print('ola')
+
+      print('bla')
   })
   
   observeEvent(input$compOnAROC, {
+    if (input$comptype == 'AROC'){
+    try(
     AROCobj <- gene_aroc_analysis(
       loadedData(),
       input$marker,
       input$resultcol,
       input$cov,
-      as.integer(input$healthy_pop)
-    )
+      as.integer(input$healthy_pop), 
+      aroc_type = 'Semiparametric'
+    ))
     
+    try(
     polROCobj <- autopooled(
       loadedData(),
       input$marker,
       input$resultcol,
       as.integer(input$healthy_pop),
-      as.integer(input$disease_pop)
-    )
+      as.integer(input$disease_pop),
+      type = 'Pooled Empirical'
+    ))
+      output$AROCcompplot <-
+        renderPlot(compAROC_ggplot(AROCobj, polROCobj, 'Title', 'AROC', 'ROC'))
+      
+    } else {
+        
+      tempvar <- loadedData()
+      templist <- split(tempvar, tempvar[input$cov])
+      print(str(templist))
+      
+      binary1 <- templist[[1]]
+      binary1 <- binary1[,c(input$marker,input$resultcol)]
+      
+      binary2 <- templist[[2]]
+      binary2 <- binary2[,c(input$marker,input$resultcol)]
+      
+      
+   
+      #print(head(binary1))
+      #print(head(binary2))
+
+      datafromfunc <- comp_converter(binary1,binary2,input$resultcol,input$resultcol,FALSE)
+
+      sim1.ind = unlist(datafromfunc[1])
+      sim2.ind = unlist(datafromfunc[2])
+      sim1.sta = unlist(datafromfunc[3])
+      sim2.sta = unlist(datafromfunc[4])
+      
+      sim1.pred = prediction(sim1.ind, sim1.sta)
+      sim2.pred = prediction(sim2.ind, sim2.sta)
+      sim1.curve = performance(sim1.pred, "tpr", "fpr")
+      sim2.curve = performance(sim2.pred, "tpr", "fpr")
+      
+      roc.curves.plot(sim1.curve, sim2.curve, mod1=moda1, mod2=moda2)
+      res <- roc.curves.boot(datafromfunc,100, 0.05,name='CRIB_sex_ind',"CRIBM","CRIBF",FALSE)
+      
+      
+      
+      
+        
+      output$AROCcompplot <-
+        renderPlot(roc.curves.plot(sim1.curve, sim2.curve, mod1=moda1, mod2=moda2))
+      
+      }
     
-    output$AROCcompplot <-
-      renderPlot(compAROC_ggplot(AROCobj, polROCobj, 'Title', 'AROC', 'ROC'))
+
     
   })
   
