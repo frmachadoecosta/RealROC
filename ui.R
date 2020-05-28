@@ -1,5 +1,7 @@
 library('shinythemes')
 library('dplyr')
+library('shinyWidgets')
+library('shinycssloaders')
 shinyUI(navbarPage('RealROC', theme = shinytheme("flatly"),
                   
 
@@ -57,7 +59,7 @@ shinyUI(navbarPage('RealROC', theme = shinytheme("flatly"),
                ),
                mainPanel(
                  tabsetPanel(
-                   tabPanel('Curve Plot', plotOutput('roccurve')),
+                   tabPanel('Curve Plot',plotOutput('roccurve')),
                    tabPanel('Population Distribution',plotOutput('classic_density'))
                  )
                )

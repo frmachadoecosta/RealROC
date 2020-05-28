@@ -48,12 +48,15 @@ shinyServer(function(input, output, session) {
     
     if (input$classicurve_type == 'Empirical Smooth') {
       output$roccurve <- renderPlot({
+        loadfunc()
         plot(pROC::smooth(roccurve))
         
         
       })
     } else {
+      
       output$roccurve <- renderPlot({
+        loadfunc()
         plot(roccurve)
       })
     }
@@ -95,6 +98,7 @@ shinyServer(function(input, output, session) {
     )
     
     output$aroc <- renderPlot({
+      loadfunc()
       plot(aroc_curve)
     })
   })
@@ -181,10 +185,13 @@ shinyServer(function(input, output, session) {
       type = 'Pooled Empirical'
     ))
       output$AROCcompplot <-
-        renderPlot(compAROC_ggplot(AROCobj, polROCobj, 'Title', 'AROC', 'ROC'))
+        renderPlot({
+          loadfunc()
+          compAROC_ggplot(AROCobj, polROCobj, 'Title', 'AROC', 'ROC')
+          })
       
     } else {
-        
+      try({  
       tempvar <- loadedData()
       templist <- split(tempvar, tempvar[input$cov])
       print(str(templist))
@@ -202,6 +209,9 @@ shinyServer(function(input, output, session) {
 
       datafromfunc <- comp_converter(binary1,binary2,input$resultcol,input$resultcol,FALSE)
 
+      moda1 = paste0(input$cov,'-',binary1[1,input$cov])
+      moda2 = paste0(input$cov,'-',binary2[1,input$cov])
+      
       sim1.ind = unlist(datafromfunc[1])
       sim2.ind = unlist(datafromfunc[2])
       sim1.sta = unlist(datafromfunc[3])
@@ -216,11 +226,14 @@ shinyServer(function(input, output, session) {
       res <- roc.curves.boot(datafromfunc,100, 0.05,name='CRIB_sex_ind',"CRIBM","CRIBF",FALSE)
       
       
-      
+      })
       
         
       output$AROCcompplot <-
-        renderPlot(roc.curves.plot(sim1.curve, sim2.curve, mod1=moda1, mod2=moda2))
+        
+        renderPlot({
+          loadfunc()
+          roc.curves.plot(sim1.curve, sim2.curve, mod1=moda1, mod2=moda2)})
       
       }
     

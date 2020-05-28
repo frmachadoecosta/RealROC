@@ -193,5 +193,16 @@ comp_converter <- function(df1,df2,rescol1,rescol2, related){
   
 }
 
+# loading function
+
+loadfunc <- function(){
+  withProgress(message = 'Ploting Curve',
+              value = 0, {
+               for (i in 1:15) {
+                 incProgress(1/15)
+                 Sys.sleep(0.05)
+               }
+             })
+}
 
 
