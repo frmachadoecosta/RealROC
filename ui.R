@@ -105,8 +105,12 @@ shinyUI(navbarPage('RealROC', theme = shinytheme("flatly"),
              
              ),
     
-    tabPanel(title='5. Report'
-             ),
+    tabPanel(title='5. Report',
+             fillPage(
+               h4('This section is reserved to log application usage and function reports'),
+               h6('All relevant statistics can be found here'),
+               textOutput('reporttext')
+             )),
     
     tabPanel(title='Advanced',
              sidebarLayout(

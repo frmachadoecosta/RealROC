@@ -3,6 +3,13 @@ shinyServer(function(input, output, session) {
   loadedData <- reactiveVal()
   listentoDataInputs <- reactive({list(input$main, input$sampledata)})
   
+  textobj <- reactiveVal('')
+  
+  #observeEvent(input$sampledata,{
+  #textobj(newreport(textobj,'adeus'))
+  #  })
+
+  
   observeEvent(input$sampledata, {
     data('endosim')
     loadedData(endosim)
@@ -20,7 +27,8 @@ shinyServer(function(input, output, session) {
       )
     )
   })
-
+  
+  output$reporttext <- renderText(textobj())
   #---------
   observeEvent(input$gene_classic, {
     

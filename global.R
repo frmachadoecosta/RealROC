@@ -54,7 +54,7 @@ gene_aroc_analysis <- function(data, testcol, resultcol, covcol, result_tag, aro
     aroc_analysis <-  AROC.bnp(formula.healthy = formula,
                               group = resultcol,
                               tag.healthy = result_tag,
-                              data = x2)
+                              data = x2,nsim = 1000, nburn = 200)
     
   } else if (aroc_type == 'Semiparametric Bayesian'){
     aroc_analysis <-  AROC.bsp(formula.healthy = formula,
@@ -204,5 +204,15 @@ loadfunc <- function(){
                }
              })
 }
+
+#update report text (must be inside observe element)
+newreport <- function(reportval, newtext) {
+    current_value <- reportval()
+    new_value <- paste0(current_value,'\n', newtext)
+    
+    new_value
+  }
+
+
 
 
