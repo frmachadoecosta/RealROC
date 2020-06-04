@@ -1,7 +1,6 @@
 library('shinythemes')
 library('dplyr')
-library('shinyWidgets')
-library('shinycssloaders')
+
 shinyUI(navbarPage('RealROC', theme = shinytheme("flatly"),
                   
 

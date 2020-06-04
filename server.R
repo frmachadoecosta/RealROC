@@ -1,4 +1,6 @@
 library('npROCRegression')
+library('Comp2ROC')
+
 shinyServer(function(input, output, session) {
   loadedData <- reactiveVal()
   listentoDataInputs <- reactive({list(input$main, input$sampledata)})
