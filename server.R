@@ -1,5 +1,6 @@
 library('npROCRegression')
 library('Comp2ROC')
+library('pROC')
 
 shinyServer(function(input, output, session) {
   loadedData <- reactiveVal()
@@ -15,6 +16,7 @@ shinyServer(function(input, output, session) {
   observeEvent(input$sampledata, {
     data('endosim')
     loadedData(endosim)
+    textobj(newreport(textobj,tags$div('Using the Sample Data provided by RealROC.')))
   })
   
   observe({
@@ -43,6 +45,7 @@ shinyServer(function(input, output, session) {
         as.integer(input$healthy_pop),
         as.integer(input$disease_pop)
       ))
+      
     }
     if (input$classicurve_type == 'Pooled Empirical' ||
         input$classicurve_type == 'Pooled Bayesian') {
@@ -68,7 +71,29 @@ shinyServer(function(input, output, session) {
       output$roccurve <- renderPlot({
         loadfunc()
         plot(roccurve)
-      })
+        })
+      
+      textobj(newreport(
+        textobj,tags$div(
+          paste0("Calculated ROC curve using the ",as.character(input$classicurve_type), ' method'
+          ))))
+      textobj(newreport(
+        textobj,tags$div(paste0(
+        'This method used the following paramaters:
+                         Marker: ',input$marker,
+                         'Result Column: ', input$resultcol
+        ))))
+      if (is.null(roccurve$auc)) {
+        textobj(newreport(
+          textobj,tags$div(paste0(
+            'The resulting AUC is:', roccurve$AUC[1]
+          ))))
+      }else{
+      
+      textobj(newreport(
+        textobj,tags$div(paste0(
+          'The resulting AUC is:', roccurve$auc
+        ))))}
     }
     
   })
