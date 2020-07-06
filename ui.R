@@ -122,6 +122,7 @@ shinyUI(navbarPage('RealROC', theme = shinytheme("flatly"),
              ),
     
     tabPanel(title='Help',
-             'This section is reserved for documentation and is under construction'
+             includeMarkdown("README.md"), 
+             style = 'overflow-y:scroll; max-height: 90vh'
              )
 ))
