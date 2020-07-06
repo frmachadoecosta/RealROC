@@ -53,7 +53,7 @@ shinyUI(navbarPage('RealROC', theme = shinytheme("flatly"),
                  
                  roccondiButtons("counter1", "ROCParam Classic"),
                  
-                 actionButton('gene_classic',"Plot Distributions")
+                 actionButton('gene_classic',"Plot ROC")
                  
                ),
                mainPanel(
@@ -77,7 +77,7 @@ shinyUI(navbarPage('RealROC', theme = shinytheme("flatly"),
                  
                  uiOutput('AROCcovariate'),
                  
-                 actionButton('gene_aroc', 'Generate AROC')
+                 actionButton('gene_aroc', 'Plot AROC')
              ),
              mainPanel(
                tabsetPanel(

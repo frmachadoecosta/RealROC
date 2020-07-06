@@ -71,17 +71,22 @@ gene_aroc_analysis <- function(data, testcol, resultcol, covcol, result_tag, aro
   aroc_analysis
 }
 aroc_density_builder <- function(data,testcol,resultcol,covcol,color1=3,color2=2){
-  
   resultcolfactor <- as.factor(data[[resultcol]])
-
   
-  plot(data[[covcol]],data[[testcol]],
-       pch = c(16, 17)[resultcolfactor],  
-       col = c(color1,color2)[resultcolfactor],
-       xlab = covcol, ylab = testcol)
-  legend('topright', legend = levels(resultcolfactor), fill=c(color1,color2))
+  if (is.factor(data[[covcol]])){
+    
+    ggplot(data, aes_string(x=covcol,y=testcol, fill=factor(data[[resultcol]]))) +
+      geom_boxplot() + scale_fill_manual(values=c('3', '2'))
+    
+  }else{
+    
+    plot(data[[covcol]],data[[testcol]],
+         pch = c(16, 17)[resultcolfactor],  
+         col = c(color1,color2)[resultcolfactor],
+         xlab = covcol, ylab = testcol)
+    legend('topright', legend = levels(resultcolfactor), fill=c(color1,color2))
+  }
 }
-
 roccondiButtons <- function(id, label = "ROCParam") {
   ns <- NS(id)
   uiOutput(ns("roccondicionals"), label = label)
