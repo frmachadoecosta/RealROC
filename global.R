@@ -1,4 +1,4 @@
-sapply(list('shiny','DT','AROC','shinythemes','sm','dplyr','npROCRegression','pROC', 'Comp2ROC'), 
+sapply(list('shiny','DT','AROC','shinythemes','sm','dplyr','npROCRegression','pROC', 'Comp2ROC', 'ggplot2'), 
        function(x) library(x, character.only=T))
 
 autopooled <- function(data,testcol,resultcol,healthyRes,diseaseRes,type){
@@ -221,3 +221,43 @@ newreport <- function(reportval, newtext) {
 
 
 
+propersummary <- function(arocobj, marker, resultcol, healthytag, covariate){
+  
+  auc <- signif(as.numeric(arocobj[['AUC']][1]), 4)
+  low <- signif(as.numeric(arocobj[['AUC']][2]), 4)
+  high <- signif(as.numeric(arocobj[['AUC']][3]), 4)
+  
+  method <- attr(arocobj, 'class')[2]
+  
+  pre <- 'Report for AROC Module'
+  sepline <- '-----'
+  a <- paste0('Method Used: ' , method)
+  b <- paste0('Marker: ', as.character(marker))
+  c <- paste0('Result Column: ', as.character(resultcol))
+  d <- paste0('Healthy Value: ', as.character(healthytag))
+  e <- paste0('Covariate: ', as.character(covariate))
+  aucCI <- paste0( ' (',low,',',high,')')
+  f <- paste0('>Area under the AROC (AAUC): ', auc, aucCI)
+  
+  res <- c(sepline, pre, sepline, a,b,c,d,e, ' ', f)
+  
+  if (method == 'AROC.sp'){
+    f1 <-  signif(as.numeric(summary(arocobj$fit.h)$fstatistic[1]), 4)
+    f2 <- summary(arocobj$fit.h)$fstatistic[2]
+    f3 <- summary(arocobj$fit.h)$fstatistic[3]
+    
+    mrs <-  signif(as.numeric(summary(arocobj$fit.h)$r.squared), 4)
+    ars <- signif(as.numeric(summary(arocobj$fit.h)$adj.r.squared), 4)
+    pvalue1 <- signif(as.numeric(summary(arocobj$fit.h)$coefficients[2,4]), 4)
+    
+    g0 <- 'Fited Regression Model Report'
+    g <- paste0('>Multiple R Squared: ', mrs)
+    h <- paste0('>Adjusted R-squared: ', ars)
+    k <- paste0('>F-statistic: ', f1, ' on ' , f2, ' and ', f3, ' DF')
+    l <- paste0('>p-value:',pvalue1)
+    
+    res <- c(res,sepline,g0,g,h,k,l)
+  } 
+  
+  res
+}

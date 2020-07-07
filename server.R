@@ -120,7 +120,7 @@ shinyServer(function(input, output, session) {
   })
   
   observeEvent(input$gene_aroc, {
-    try(
+    try({
     aroc_curve <-
       gene_aroc_analysis(
         loadedData(),
@@ -130,12 +130,28 @@ shinyServer(function(input, output, session) {
         as.integer(input$healthy_pop),
         input$aroc_type
       )
+    
+   toreport <-  propersummary(aroc_curve, input$marker, input$resultcol, input$healthy_pop, input$cov)
+   for (line in toreport){
+     textobj(newreport(
+       textobj,tags$div(line)
+     ))
+   }
+   
+   
+}
     )
+    
+    #textobj(newreport(
+    #  textobj,tags$div(summary(aroc_curve)
+    #  )))
     
     output$aroc <- renderPlot({
       loadfunc()
       plot(aroc_curve)
     })
+    
+
   })
   
   
