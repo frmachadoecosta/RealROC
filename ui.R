@@ -108,6 +108,7 @@ shinyUI(navbarPage('RealROC', theme = shinytheme("flatly"),
              fillPage(
                h4('This section is reserved to log application usage and function reports'),
                h6('All relevant statistics can be found here'),
+               div('==================================='),
                htmlOutput('reporttext')),
                style = 'overflow-y:scroll; max-height: 90vh'
              ),

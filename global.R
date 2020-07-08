@@ -300,6 +300,36 @@ summaryCompAroc <- function(arocobj, pooledobj, cov){
   res
 }
 
+summaryCOmp2ROC <- function(comp2rocobj, name1, name2){
+  sepline <- '-----'
+  intro <- 'Comparison between ROC and AROC curves using the Comp2ROC method'
+  auc1 <- paste0(
+    'AUC for ',name1,': ', signif(comp2rocobj[['Area1']],4),' (', 
+    signif(comp2rocobj[['ICLB1']],4),', ', signif(comp2rocobj[['ICUB1']],4), ')')
+  auc2 <- paste0(
+    'AUC for ',name2,': ', signif(comp2rocobj[['Area2']],4),' (', 
+    signif(comp2rocobj[['ICLB2']],4),', ', signif(comp2rocobj[['ICUB2']],4), ')')
+  
+  testdiff <- 'Test of Differences'
+  zstat <- paste0('Z statistic: ', signif(comp2rocobj[['zstats']],4))
+  pval <- paste0('p-value: ', signif(comp2rocobj[['pvalue1']],4))
+  
+  global <- paste0('Sum of Global Areas Differences (TS): ' ,
+                   signif(comp2rocobj[['diff']],4),' (', 
+                   signif(comp2rocobj[['ICLBDiff']],4),', ', 
+                   signif(comp2rocobj[['ICUBDiff']],4), ')')
+  
+  
+  res <- c(sepline,intro,sepline,auc1,auc2, testdiff,zstat,pval, global)
+  res
+}
+
+
+
+
+
+
+
 
 
 

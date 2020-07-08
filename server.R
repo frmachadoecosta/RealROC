@@ -270,8 +270,11 @@ shinyServer(function(input, output, session) {
 
       datafromfunc <- comp_converter(binary1,binary2,input$resultcol,input$resultcol,FALSE)
 
-      moda1 = paste0(input$cov,'-',binary1[1,input$cov])
-      moda2 = paste0(input$cov,'-',binary2[1,input$cov])
+      name1 <- names(templist)[1]
+      name2 <- names(templist)[2]
+      
+      moda1 = paste0(input$cov,'-',name1)
+      moda2 = paste0(input$cov,'-',name2)
       
       sim1.ind = unlist(datafromfunc[1])
       sim2.ind = unlist(datafromfunc[2])
@@ -286,6 +289,12 @@ shinyServer(function(input, output, session) {
       roc.curves.plot(sim1.curve, sim2.curve, mod1=moda1, mod2=moda2)
       res <- roc.curves.boot(datafromfunc,100, 0.05,name='CRIB_sex_ind',"CRIBM","CRIBF",FALSE)
       
+      toreportcomp <-  summaryCOmp2ROC(res,name1,name2)
+      for (line in toreportcomp){
+        textobj(newreport(
+          textobj,tags$div(line)
+        ))
+      }
       
       })
       
