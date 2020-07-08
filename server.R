@@ -216,7 +216,7 @@ shinyServer(function(input, output, session) {
   
   observeEvent(input$compOnAROC, {
     if (input$comptype == 'AROC'){
-    try(
+    try({
     AROCobj <- gene_aroc_analysis(
       loadedData(),
       input$marker,
@@ -224,9 +224,9 @@ shinyServer(function(input, output, session) {
       input$cov,
       as.integer(input$healthy_pop), 
       aroc_type = 'Semiparametric'
-    ))
+    )
     
-    try(
+    
     polROCobj <- autopooled(
       loadedData(),
       input$marker,
@@ -234,7 +234,17 @@ shinyServer(function(input, output, session) {
       as.integer(input$healthy_pop),
       as.integer(input$disease_pop),
       type = 'Pooled Empirical'
-    ))
+    )
+    
+    #report
+    toreportcomp <-  summaryCompAroc(AROCobj, polROCobj, input$cov)
+    for (line in toreportcomp){
+      textobj(newreport(
+        textobj,tags$div(line)
+      ))
+    }
+    
+    })
       output$AROCcompplot <-
         renderPlot({
           loadfunc()

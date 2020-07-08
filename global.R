@@ -236,7 +236,7 @@ propersummary <- function(arocobj, marker, resultcol, healthytag, covariate){
   c <- paste0('Result Column: ', as.character(resultcol))
   d <- paste0('Healthy Value: ', as.character(healthytag))
   e <- paste0('Covariate: ', as.character(covariate))
-  aucCI <- paste0( ' (',low,',',high,')')
+  aucCI <- paste0( ' (',low,', ',high,')')
   f <- paste0('>Area under the AROC (AAUC): ', auc, aucCI)
   
   res <- c(sepline, pre, sepline, a,b,c,d,e, ' ', f)
@@ -261,3 +261,45 @@ propersummary <- function(arocobj, marker, resultcol, healthytag, covariate){
   
   res
 }
+
+
+summaryCompAroc <- function(arocobj, pooledobj, cov){
+  
+  auc <- signif(as.numeric(arocobj[['AUC']][1]), 4)
+  low <- signif(as.numeric(arocobj[['AUC']][2]), 4)
+  high <- signif(as.numeric(arocobj[['AUC']][3]), 4)
+  aaucCI <- paste0( ' (',low,', ',high,')')
+  
+  aucClassicEst <- signif(as.numeric(pooledobj[['AUC']][1]), 4)
+  aucClassicLow <- signif(as.numeric(pooledobj[['AUC']][2]), 4)
+  aucClassicHigh <- signif(as.numeric(pooledobj[['AUC']][3]), 4)
+  classicCI <- paste0( ' (',aucClassicLow,', ',aucClassicHigh,')')
+  
+  sepline <- '-----'
+  intro <- 'Comparison between ROC and AROC curves using the AROC method'
+  covID <- paste0('Covariate being tested: ', as.character(cov))
+  auccomp1 <- paste0('AUC for unajusted ROC: ', aucClassicEst, classicCI )
+  auccomp2 <- paste0('AAUC for adjusted ROC curve: ', auc, aaucCI)
+  
+  f1 <-  signif(as.numeric(summary(arocobj$fit.h)$fstatistic[1]), 4)
+  f2 <- summary(arocobj$fit.h)$fstatistic[2]
+  f3 <- summary(arocobj$fit.h)$fstatistic[3]
+  
+  mrs <-  signif(as.numeric(summary(arocobj$fit.h)$r.squared), 4)
+  ars <- signif(as.numeric(summary(arocobj$fit.h)$adj.r.squared), 4)
+  pvalue1 <- signif(as.numeric(summary(arocobj$fit.h)$coefficients[2,4]), 4)
+  
+  g0 <- 'Fited Regression Model Report'
+  g <- paste0('>Multiple R Squared: ', mrs)
+  h <- paste0('>Adjusted R-squared: ', ars)
+  k <- paste0('>F-statistic: ', f1, ' on ' , f2, ' and ', f3, ' DF')
+  l <- paste0('>p-value:',pvalue1)
+  
+  res <- c(sepline,intro,sepline, covID, auccomp1, auccomp2,sepline,g0,g,h,k,l)
+  
+  res
+}
+
+
+
+
