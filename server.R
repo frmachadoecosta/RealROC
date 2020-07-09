@@ -1,6 +1,8 @@
 library('npROCRegression')
 library('Comp2ROC')
 library('pROC')
+library('readxl')
+library("tools")
 
 shinyServer(function(input, output, session) {
   loadedData <- reactiveVal()
@@ -21,6 +23,8 @@ shinyServer(function(input, output, session) {
   
   observe({
     req(input$main$datapath) # make sure variable isn't empty
+    try({
+      if (file_ext(input$main$datapath) == 'csv'){
     loadedData(
       read.csv(
         # initialize reactiveVal
@@ -28,8 +32,14 @@ shinyServer(function(input, output, session) {
         header = input$header,
         sep = input$sep,
         quote = input$quote
-      )
-    )
+      ))} else {
+        loadedData(
+          read_excel(
+            input$main$datapath, 
+            sheet = input$sheetId
+            ))}
+    
+  })
   })
   
   output$reporttext <- renderText(textobj())
@@ -167,6 +177,7 @@ shinyServer(function(input, output, session) {
     listentoDataInputs(), {
     callModule(roccondi, "counter1", loadedData())
     callModule(roccondi, "counter2", loadedData())
+    callModule(roccondi, "counter3", loadedData())
     
 
     
@@ -193,26 +204,18 @@ shinyServer(function(input, output, session) {
   
   #------- Comp Module
   
-  observeEvent(input$comptype, {
-    if (input$comptype == 'AROC') {
-      tagList(
-        callModule(roccondi, 'counter3', loadedData()),
-        output$AROCcovariatecomp <-
-          renderUI(
-            selectInput(
-              'cov',
-              'Select Covariate ',
-              multiple = TRUE,
-              choices = names(loadedData())
-            )
-          )
-      )
-      
-    }
-    else
-
-      print('bla')
-  })
+  observeEvent(
+    listentoDataInputs()
+    , {
+      output$AROCcovariatecomp <- renderUI({
+        selectInput(
+          'cov',
+          'Select Select Covariate ',
+          multiple = TRUE,
+          choices = names(loadedData())
+        )
+      })
+    })
   
   observeEvent(input$compOnAROC, {
     if (input$comptype == 'AROC'){
@@ -245,10 +248,11 @@ shinyServer(function(input, output, session) {
     }
     
     })
+      comptitle <- paste0('ROC adjustment Comparison for ', input$cov)
       output$AROCcompplot <-
         renderPlot({
           loadfunc()
-          compAROC_ggplot(AROCobj, polROCobj, 'Title', 'AROC', 'ROC')
+          compAROC_ggplot(AROCobj, polROCobj, comptitle, 'AROC', 'ROC')
           })
       
     } else {

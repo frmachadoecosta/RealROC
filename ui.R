@@ -13,6 +13,7 @@ shinyUI(navbarPage('RealROC', theme = shinytheme("flatly"),
             fileInput('main', 'Input file', multiple = FALSE,
                       accept =".csv"),
             
+            h4('.csv options'),
             checkboxInput("header", "Header", TRUE),
             
             
@@ -28,8 +29,15 @@ shinyUI(navbarPage('RealROC', theme = shinytheme("flatly"),
                                      "Double Quote" = '"',
                                      "Single Quote" = "'"),
                          selected = '"'),
-          
-            actionButton('sampledata', 'Use sample data')
+            HTML('<br>'),
+            h4('.xls/.xlsx options'),
+            
+            numericInput('sheetId', 'Sheet', value = 1, min=1, 
+            width = '50%'),
+            
+            HTML('<br>'),
+            h4('Try app with no data import'),
+            actionButton('sampledata', 'Use sample data'),
           ),
       
           
