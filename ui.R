@@ -1,6 +1,8 @@
 library('shinythemes')
 library('dplyr')
 
+options(shiny.sanitize.errors = TRUE)
+
 shinyUI(navbarPage('RealROC', theme = shinytheme("flatly"),
                   
 

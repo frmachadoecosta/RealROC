@@ -53,7 +53,8 @@ shinyServer(function(input, output, session) {
         input$marker,
         input$resultcol,
         as.integer(input$healthy_pop),
-        as.integer(input$disease_pop)
+        as.integer(input$disease_pop),
+        input$classicurve_type
       ))
       
     }
@@ -69,42 +70,18 @@ shinyServer(function(input, output, session) {
       ))
     }
     
-    if (input$classicurve_type == 'Empirical Smooth') {
-      output$roccurve <- renderPlot({
-        loadfunc()
-        plot(pROC::smooth(roccurve))
-        
-        
-      })
-    } else {
       
       output$roccurve <- renderPlot({
         loadfunc()
         plot(roccurve)
         })
       
-      textobj(newreport(
-        textobj,tags$div(
-          paste0("Calculated ROC curve using the ",as.character(input$classicurve_type), ' method'
-          ))))
-      textobj(newreport(
-        textobj,tags$div(paste0(
-        'This method used the following paramaters:
-                         Marker: ',input$marker,
-                         'Result Column: ', input$resultcol
-        ))))
-      if (is.null(roccurve$auc)) {
-        textobj(newreport(
-          textobj,tags$div(paste0(
-            'The resulting AUC is:', roccurve$AUC[1]
-          ))))
-      }else{
       
-      textobj(newreport(
-        textobj,tags$div(paste0(
-          'The resulting AUC is:', roccurve$auc
-        ))))}
-    }
+      classicrep <-  classicsummary(roccurve, input$classicurve_type, input$marker, input$resultcol)
+      for (line in classicrep){
+        textobj(newreport(
+          textobj,tags$div(line)))}
+    
     
   })
   

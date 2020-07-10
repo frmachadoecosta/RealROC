@@ -145,7 +145,7 @@ values_inputed <- function(...){
 }
 
 # classic empirical curve
-empiricalcurve <- function(data,testcol,resultcol,healthyRes,diseaseRes){
+empiricalcurve <- function(data,testcol,resultcol,healthyRes,diseaseRes,curvetype){
   
   #print(data[[resultcol]])
   
@@ -156,6 +156,7 @@ empiricalcurve <- function(data,testcol,resultcol,healthyRes,diseaseRes){
       # arguments for plot
       plot=TRUE, auc.polygon=TRUE, max.auc.polygon=TRUE, grid=TRUE,
       print.auc=TRUE, show.thres=TRUE)
+  if (curvetype == 'Empirical Smooth'){res <- pROC::smooth(res)}
   res
 }
 
@@ -326,7 +327,21 @@ summaryCOmp2ROC <- function(comp2rocobj, name1, name2){
 
 
 
-
+classicsummary <- function(curve, method, marker,resultcol){
+  sepline <- '-----'
+  intro <- 'Report for Classic ROC Module'
+  methodcar <- paste0('Method used: ',method )
+  markv <- paste0('Marker: ', marker)
+  restulv <- paste0('Result Column: ', resultcol)
+  
+  if (is.null(curve[['auc']])){
+    aucv <- paste0('AUC: ', signif(curve[['AUC']],4))
+    }else {aucv <- paste0('AUC: ', signif(curve[['auc']],4))}
+  
+  
+  
+  res <- c(sepline, intro, sepline,methodcar, markv, restulv, aucv )
+}
 
 
 
