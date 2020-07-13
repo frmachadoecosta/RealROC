@@ -51,29 +51,26 @@ shinyServer(function(input, output, session) {
   output$reporttext <- renderText(textobj())
   #---------
   observeEvent(input$gene_classic, {
-    if (input$classicurve_type == 'Empirical' ||
-        input$classicurve_type == 'Empirical Smooth') {
-      try(roccurve <- empiricalcurve(
+    try({
+      roccurve <- do_classicroc(
         loadedData(),
         input$marker,
         input$resultcol,
         as.integer(input$healthy_pop),
         as.integer(input$disease_pop),
         input$classicurve_type
-      ))
+      )
       
-    }
-    if (input$classicurve_type == 'Pooled Empirical' ||
-        input$classicurve_type == 'Pooled Bayesian') {
-      try(roccurve <- autopooled(
-        loadedData(),
-        input$marker,
-        input$resultcol,
-        as.integer(input$healthy_pop),
-        as.integer(input$disease_pop),
-        input$classicurve_type
-      ))
-    }
+      classicrep <-
+        classicsummary(roccurve,
+                       input$classicurve_type,
+                       input$marker,
+                       input$resultcol)
+      for (line in classicrep) {
+        textobj(newreport(textobj, tags$div(line)))
+      }
+      
+    })
     
     
     output$roccurve <- renderPlot({
@@ -82,14 +79,7 @@ shinyServer(function(input, output, session) {
     })
     
     
-    classicrep <-
-      classicsummary(roccurve,
-                     input$classicurve_type,
-                     input$marker,
-                     input$resultcol)
-    for (line in classicrep) {
-      textobj(newreport(textobj, tags$div(line)))
-    }
+    
     
     
   })
@@ -112,7 +102,7 @@ shinyServer(function(input, output, session) {
                    selectInput(
                      'cov',
                      'Select Select Covariate ',
-                     multiple = TRUE,
+                     multiple = F,
                      choices = names(loadedData())
                    )
                  })
@@ -143,9 +133,7 @@ shinyServer(function(input, output, session) {
       
     })
     
-    #textobj(newreport(
-    #  textobj,tags$div(summary(aroc_curve)
-    #  )))
+
     
     output$aroc <- renderPlot({
       loadfunc()
@@ -220,7 +208,7 @@ shinyServer(function(input, output, session) {
                    selectInput(
                      'cov',
                      'Select Select Covariate ',
-                     multiple = TRUE,
+                     multiple = F,
                      choices = names(loadedData())
                    )
                  })

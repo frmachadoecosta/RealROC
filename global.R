@@ -1,6 +1,19 @@
 sapply(list('shiny','DT','AROC','shinythemes','sm','dplyr','npROCRegression','pROC', 'Comp2ROC', 'ggplot2'), 
        function(x) library(x, character.only=T))
 
+
+do_classicroc <- function(data,testcol,resultcol,healthyRes,diseaseRes,type){
+  if (type == 'Empirical' || type == 'Empirical Smooth') {
+    res <- empiricalcurve(data,testcol,resultcol,healthyRes,diseaseRes,type)
+  }
+  if (type == 'Pooled Empirical' || type == 'Pooled Bayesian'){
+    res <- autopooled(data,testcol,resultcol,healthyRes,diseaseRes,type)
+  }
+ res 
+}
+
+
+
 autopooled <- function(data,testcol,resultcol,healthyRes,diseaseRes,type){
   #missing NA treatment
   
