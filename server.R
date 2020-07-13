@@ -95,9 +95,13 @@ shinyServer(function(input, output, session) {
   })
   
   observeEvent(input$gene_classic, {
-    #dense_plot <- density_builder(loadedData(), input$marker, input$resultcol)
+    isolate({ #makes only responde to Action Button
+    tempmarker <- input$marker
+    tempresult <- input$resultcol
+    })
+    
     output$classic_density <- renderPlot({
-      density_builder(loadedData(), input$marker, input$resultcol)
+      density_builder(loadedData(), tempmarker, tempresult)
     })
   })
   
@@ -153,8 +157,16 @@ shinyServer(function(input, output, session) {
   
   
   observeEvent(input$gene_aroc, {
+    
+    isolate({ #makes only responde to Action Button
+      tempmarker <- input$marker
+      tempresult <- input$resultcol
+      tempcov <- input$cov
+    })
+    
+    
     output$aroc_density <- renderPlot({
-      aroc_density_builder(loadedData(), input$marker, input$resultcol, input$cov)
+      aroc_density_builder(loadedData(), tempmarker, tempresult, tempcov)
     })
   })
   
