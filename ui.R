@@ -114,7 +114,8 @@ shinyUI(
                  
                  roccondiButtons("counter2", "ROCParam Cov"),
                  
-                 uiOutput('AROCcovariate'),
+                 covselButtons("c33", "AROC cov"),
+                 
                  
                  actionButton('gene_aroc', 'Plot AROC')
                ),
@@ -130,7 +131,7 @@ shinyUI(
                  radioButtons('comptype', 'Select Comparison', choices = c('AROC', 'Comp2ROC')),
                  tagList(
                    roccondiButtons("counter3", "ROCParam Classic"),
-                   uiOutput('AROCcovariatecomp'),
+                   covselButtons("c44", "Comp cov"),
                    actionButton('compOnAROC', 'See Comparison')
                  )
                ),

@@ -120,6 +120,28 @@ roccondi <- function(input, output, session,ndata,n) {
     outputOptions(output, "roccondicionals", suspendWhenHidden = FALSE)
 }
 
+covselButtons <- function(id, label = "AROCParam") {
+  ns <- NS(id)
+  uiOutput(ns("covsel"), label = label)
+  
+}
+
+covselect <- function(input, output, session,ndata,n) {
+  output$covsel <- renderUI({
+    tagList(
+      selectInput(paste0('cov',n),'Select Covariate',
+                  multiple=FALSE, choices = names(ndata))
+    )
+  })
+  outputOptions(output, "covsel", suspendWhenHidden = FALSE)
+}
+
+
+
+
+
+
+
 compAROC_ggplot <- function(obj1, obj2, plottitle, leged1, leged2){
   library(ggplot2)
   p <- seq(0, 1, l = 101)

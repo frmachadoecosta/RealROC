@@ -1,17 +1,7 @@
 library('shiny')
 
 #AROC Module
-observeEvent(listentoDataInputs()
-             , {
-               output$AROCcovariate <- renderUI({
-                 selectInput(
-                   'cov',
-                   'Select Select Covariate ',
-                   multiple = F,
-                   choices = names(loadedData())
-                 )
-               })
-             })
+
 
 observeEvent(input$gene_aroc, {
   try({
@@ -20,7 +10,7 @@ observeEvent(input$gene_aroc, {
         loadedData(),
         input$marker3,
         input$resultcol3,
-        input$cov,
+        input$cov3,
         as.integer(input$healthy_pop3),
         input$aroc_type
       )
@@ -30,7 +20,7 @@ observeEvent(input$gene_aroc, {
                     input$marker3,
                     input$resultcol3,
                     input$healthy_pop3,
-                    input$cov)
+                    input$cov3)
     for (line in toreport) {
       textobj(newreport(textobj, tags$div(line)))
     }
@@ -54,7 +44,7 @@ observeEvent(input$gene_aroc, {
   isolate({ #makes only responde to Action Button
     tempmarker <- input$marker3
     tempresult <- input$resultcol3
-    tempcov <- input$cov
+    tempcov <- input$cov3
   })
   
   

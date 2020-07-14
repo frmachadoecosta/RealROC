@@ -1,16 +1,7 @@
 library('shiny')
 
-observeEvent(listentoDataInputs()
-             , {
-               output$AROCcovariatecomp <- renderUI({
-                 selectInput(
-                   'cov',
-                   'Select Select Covariate ',
-                   multiple = F,
-                   choices = names(loadedData())
-                 )
-               })
-             })
+#Comp Module
+
 
 observeEvent(input$compOnAROC, {
   if (input$comptype == 'AROC') {
@@ -19,7 +10,7 @@ observeEvent(input$compOnAROC, {
         loadedData(),
         input$marker4,
         input$resultcol4,
-        input$cov,
+        input$cov4,
         as.integer(input$healthy_pop4),
         aroc_type = 'Semiparametric'
       )
@@ -35,14 +26,14 @@ observeEvent(input$compOnAROC, {
       )
       
       #report
-      toreportcomp <-  summaryCompAroc(AROCobj, polROCobj, input$cov)
+      toreportcomp <-  summaryCompAroc(AROCobj, polROCobj, input$cov4)
       for (line in toreportcomp) {
         textobj(newreport(textobj, tags$div(line)))
       }
       
     })
     comptitle <-
-      paste0('ROC adjustment Comparison for ', input$cov)
+      paste0('ROC adjustment Comparison for ', input$cov4)
     output$AROCcompplot <-
       renderPlot({
         loadfunc()
@@ -52,7 +43,7 @@ observeEvent(input$compOnAROC, {
   } else {
     try({
       tempvar <- loadedData()
-      templist <- split(tempvar, tempvar[input$cov])
+      templist <- split(tempvar, tempvar[input$cov4])
       print(str(templist))
       
       binary1 <- templist[[1]]
@@ -76,8 +67,8 @@ observeEvent(input$compOnAROC, {
       name1 <- names(templist)[1]
       name2 <- names(templist)[2]
       
-      moda1 = paste0(input$cov, '-', name1)
-      moda2 = paste0(input$cov, '-', name2)
+      moda1 = paste0(input$cov4, '-', name1)
+      moda2 = paste0(input$cov4, '-', name2)
       
       sim1.ind = unlist(datafromfunc[1])
       sim2.ind = unlist(datafromfunc[2])
