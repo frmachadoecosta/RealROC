@@ -2,6 +2,7 @@ library('shiny')
 
 #Comp Module
 
+output$AROCcompplot <- renderPlot(NULL)
 
 observeEvent(input$compOnAROC, {
   if (input$comptype == 'AROC') {
@@ -98,7 +99,6 @@ observeEvent(input$compOnAROC, {
     output$AROCcompplot <-
       
       renderPlot({
-        loadfunc()
         roc.curves.plot(sim1.curve,
                         sim2.curve,
                         mod1 = moda1,

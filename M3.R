@@ -1,7 +1,7 @@
 library('shiny')
 
 #AROC Module
-
+output$aroc <- renderPlot(NULL)
 
 observeEvent(input$gene_aroc, {
   try({
@@ -31,7 +31,6 @@ observeEvent(input$gene_aroc, {
   
   
   output$aroc <- renderPlot({
-    loadfunc()
     plot(aroc_curve)
   })
   

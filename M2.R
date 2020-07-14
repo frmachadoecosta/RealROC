@@ -1,6 +1,6 @@
 library('shiny')
 
-
+output$roccurve <- renderPlot(NULL)
 
 observeEvent(input$gene_classic, {
   try({
@@ -26,7 +26,6 @@ observeEvent(input$gene_classic, {
   
   
   output$roccurve <- renderPlot({
-    loadfunc()
     plot(roccurve)
   })
   
@@ -34,7 +33,7 @@ observeEvent(input$gene_classic, {
 })
 
 observeEvent(input$gene_classic, {
-  isolate({ #makes only responde to Action Button
+  isolate({ #makes only respond to Action Button
     tempmarker <- input$marker2
     tempresult <- input$resultcol2
   })

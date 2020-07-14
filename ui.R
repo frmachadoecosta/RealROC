@@ -1,12 +1,13 @@
 library('shinythemes')
 library('dplyr')
+library(shinycssloaders)
 
 options(shiny.sanitize.errors = TRUE)
 
 shinyUI(
   navbarPage(
     'RealROC',
-    theme = shinytheme("flatly"),
+    theme = shinytheme("sandstone"),
     
     
     tabPanel(title = '1. Import Data',
@@ -94,7 +95,9 @@ shinyUI(
                  
                ),
                mainPanel(tabsetPanel(
-                 tabPanel('Curve Plot', plotOutput('roccurve')),
+                 tabPanel('Curve Plot', plotOutput('roccurve')%>% 
+                            withSpinner(color = 'khaki',
+                                        type = getOption("spinner.type", default = 5))),
                  tabPanel('Population Distribution', plotOutput('classic_density'))
                ))
              )),
@@ -120,7 +123,9 @@ shinyUI(
                  actionButton('gene_aroc', 'Plot AROC')
                ),
                mainPanel(tabsetPanel(
-                 tabPanel('AROC Curve', plotOutput('aroc')),
+                 tabPanel('AROC Curve', plotOutput('aroc')%>% 
+                            withSpinner(color = 'khaki',
+                                        type = getOption("spinner.type", default = 5))),
                  tabPanel('Population Distribution', plotOutput('aroc_density'))
                ))
              )),
@@ -135,7 +140,8 @@ shinyUI(
                    actionButton('compOnAROC', 'See Comparison')
                  )
                ),
-               mainPanel(plotOutput('AROCcompplot'))
+               mainPanel(plotOutput('AROCcompplot') %>% withSpinner(color = 'khaki',
+                                                               type = getOption("spinner.type", default = 5)))
              )),
     
     tabPanel(
