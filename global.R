@@ -106,17 +106,18 @@ roccondiButtons <- function(id, label = "ROCParam") {
   
 }
 
-roccondi <- function(input, output, session,ndata) {
+roccondi <- function(input, output, session,ndata,n) {
     output$roccondicionals <- renderUI({
       tagList(
-        selectInput('marker','Select Marker or Test ',
+        selectInput(paste0('marker',n),'Select Marker or Test ',
                     multiple=FALSE, choices = names(ndata)),
-        selectInput('resultcol','Select Result Column',
+        selectInput(paste0('resultcol',n),'Select Result Column',
                     multiple=FALSE, choices = names(ndata)),
-        textInput('healthy_pop','Select Healthy Value'),
-        textInput('disease_pop','Select Disease Value')
+        textInput(paste0('healthy_pop',n),'Select Healthy Value'),
+        textInput(paste0('disease_pop',n),'Select Disease Value')
       )
       })
+    outputOptions(output, "roccondicionals", suspendWhenHidden = FALSE)
 }
 
 compAROC_ggplot <- function(obj1, obj2, plottitle, leged1, leged2){
@@ -356,8 +357,32 @@ classicsummary <- function(curve, method, marker,resultcol){
   res <- c(sepline, intro, sepline,methodcar, markv, restulv, aucv )
 }
 
+updateMyReactive <- function(session, newvalue, oldvalues) {
+  for (val in oldvalues) {
+    watid <- substr(val ,7, nchar(val))
+    updateSelectInput(session, watid, selected = newvalue)
+  }
+}
 
+is.not.unique <- function(totest) {
+  length(unique(totest)) != 1 
+}
 
-
+seedifferent <- function(session, stringlist, varlist){
+  res <- list()
+  if (varlist[1]==varlist[2]){
+    
+    res <- list(varlist[3], c(stringlist[1], stringlist[2]))
+    
+  } else if (varlist[2]==varlist[3]) {
+    
+    res <- list(varlist[1], c(stringlist[2], stringlist[3]))
+    
+  } else{
+    
+    res <- list(varlist[2],c(stringlist[3], stringlist[1]))
+  }
+  res
+}
 
 

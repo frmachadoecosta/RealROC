@@ -32,12 +32,70 @@ shinyServer(function(input, output, session) {
   source('Advanced.R',local = T)  
   
   observeEvent(listentoDataInputs(), {
-    callModule(roccondi, "counter1", loadedData())
-    callModule(roccondi, "counter2", loadedData())
-    callModule(roccondi, "counter3", loadedData())
+    callModule(roccondi, "counter1", loadedData(),n=2)
+    callModule(roccondi, "counter2", loadedData(),n=3)
+    callModule(roccondi, "counter3", loadedData(),n=4)
     
   })
+  
+  
+
+listentoMarker <- reactive({list(input$marker2,input$marker3,input$marker4)})
+listentoResultcol <- reactive({list(input$resultcol2,input$resultcol3,input$resultcol4)})
+listentoHealthypop <- reactive({list(input$healthy_pop2,input$healthy_pop3,input$healthy_pop4)})
+listentoDiseasepop <- reactive({list(input$disease_pop2,input$disease_pop3,input$disease_pop4)})
+
+listentoUpdateinputs <- reactive({list(
+  listentoMarker(),listentoResultcol(), listentoHealthypop(), listentoDiseasepop() 
+  )})  
+
+
+
+
+   
+observeEvent(listentoUpdateinputs(),{
+
+  if (is.not.unique(listentoMarker())) { 
+    myneeds <- seedifferent(session, 
+                            c('input$marker2','input$marker3','input$marker4'), 
+                            c(input$marker2,input$marker3,input$marker4))
+    try(updateMyReactive(session, myneeds[[1]], myneeds[[2]]))
     
+    }
+  
+  else if (is.not.unique(listentoResultcol())) {
+    myneeds <- seedifferent(session, 
+                            c('input$resultcol2','input$resultcol3','input$resultcol4'), 
+                            c(input$resultcol2,input$resultcol3,input$resultcol4))
+    try(updateMyReactive(session, myneeds[[1]], myneeds[[2]]))
+    
+  }
+  else if (is.not.unique(listentoHealthypop())) {
+    myneeds <- seedifferent(session, 
+                            c('input$healthy_pop2','input$healthy_pop3','input$healthy_pop4'), 
+                            c(input$healthy_pop2,input$healthy_pop3,input$healthy_pop4))
+    try(updateMyReactive(session, myneeds[[1]], myneeds[[2]]))
+    
+  }
+  else if (is.not.unique(listentoDiseasepop())) { 
+    myneeds <- seedifferent(session, 
+                            c('input$disease_pop2','input$disease_pop3','input$disease_pop4'), 
+                            c(input$disease_pop2,input$disease_pop3,input$disease_pop4))
+    try(updateMyReactive(session, myneeds[[1]], myneeds[[2]]))
+    
+    }
+  
+  
+  })  
+    
+
+
+
+
+  
+      
+
+  
 })
 
 

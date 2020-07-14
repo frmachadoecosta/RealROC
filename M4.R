@@ -17,20 +17,20 @@ observeEvent(input$compOnAROC, {
     try({
       AROCobj <- gene_aroc_analysis(
         loadedData(),
-        input$marker,
-        input$resultcol,
+        input$marker4,
+        input$resultcol4,
         input$cov,
-        as.integer(input$healthy_pop),
+        as.integer(input$healthy_pop4),
         aroc_type = 'Semiparametric'
       )
       
       
       polROCobj <- autopooled(
         loadedData(),
-        input$marker,
-        input$resultcol,
-        as.integer(input$healthy_pop),
-        as.integer(input$disease_pop),
+        input$marker4,
+        input$resultcol4,
+        as.integer(input$healthy_pop4),
+        as.integer(input$disease_pop4),
         type = 'Pooled Empirical'
       )
       
@@ -56,10 +56,10 @@ observeEvent(input$compOnAROC, {
       print(str(templist))
       
       binary1 <- templist[[1]]
-      binary1 <- binary1[, c(input$marker, input$resultcol)]
+      binary1 <- binary1[, c(input$marker4, input$resultcol4)]
       
       binary2 <- templist[[2]]
-      binary2 <- binary2[, c(input$marker, input$resultcol)]
+      binary2 <- binary2[, c(input$marker4, input$resultcol4)]
       
       
       
@@ -69,8 +69,8 @@ observeEvent(input$compOnAROC, {
       datafromfunc <-
         comp_converter(binary1,
                        binary2,
-                       input$resultcol,
-                       input$resultcol,
+                       input$resultcol4,
+                       input$resultcol4,
                        FALSE)
       
       name1 <- names(templist)[1]

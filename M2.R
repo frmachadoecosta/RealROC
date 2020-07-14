@@ -1,21 +1,23 @@
 library('shiny')
 
+
+
 observeEvent(input$gene_classic, {
   try({
     roccurve <- do_classicroc(
       loadedData(),
-      input$marker,
-      input$resultcol,
-      as.integer(input$healthy_pop),
-      as.integer(input$disease_pop),
+      input$marker2,
+      input$resultcol2,
+      as.integer(input$healthy_pop2),
+      as.integer(input$disease_pop2),
       input$classicurve_type
     )
     
     classicrep <-
       classicsummary(roccurve,
-                     input$classicurve_type,
-                     input$marker,
-                     input$resultcol)
+                     input$classicurve_type2,
+                     input$marker2,
+                     input$resultcol2)
     for (line in classicrep) {
       textobj(newreport(textobj, tags$div(line)))
     }
@@ -33,8 +35,8 @@ observeEvent(input$gene_classic, {
 
 observeEvent(input$gene_classic, {
   isolate({ #makes only responde to Action Button
-    tempmarker <- input$marker
-    tempresult <- input$resultcol
+    tempmarker <- input$marker2
+    tempresult <- input$resultcol2
   })
   
   output$classic_density <- renderPlot({

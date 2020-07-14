@@ -18,18 +18,18 @@ observeEvent(input$gene_aroc, {
     aroc_curve <-
       gene_aroc_analysis(
         loadedData(),
-        input$marker,
-        input$resultcol,
+        input$marker3,
+        input$resultcol3,
         input$cov,
-        as.integer(input$healthy_pop),
+        as.integer(input$healthy_pop3),
         input$aroc_type
       )
     
     toreport <-
       propersummary(aroc_curve,
-                    input$marker,
-                    input$resultcol,
-                    input$healthy_pop,
+                    input$marker3,
+                    input$resultcol3,
+                    input$healthy_pop3,
                     input$cov)
     for (line in toreport) {
       textobj(newreport(textobj, tags$div(line)))
@@ -52,8 +52,8 @@ observeEvent(input$gene_aroc, {
 observeEvent(input$gene_aroc, {
   
   isolate({ #makes only responde to Action Button
-    tempmarker <- input$marker
-    tempresult <- input$resultcol
+    tempmarker <- input$marker3
+    tempresult <- input$resultcol3
     tempcov <- input$cov
   })
   
