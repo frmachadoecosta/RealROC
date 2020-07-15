@@ -276,7 +276,8 @@ propersummary <- function(arocobj, marker, resultcol, healthytag, covariate){
   aucCI <- paste0( ' (',low,', ',high,')')
   f <- paste0('>Area under the AROC (AAUC): ', auc, aucCI)
   
-  res <- c(sepline, pre, sepline, a,b,c,d,e, ' ', f)
+  #res <- c(sepline, pre, sepline, a,b,c,d,e, ' ', f)
+  res <- HTML(paste(sepline, pre, sepline, a,b,c,d,e, ' ', f, sep='<br/>'))
   
   if (method == 'AROC.sp'){
     f1 <-  signif(as.numeric(summary(arocobj$fit.h)$fstatistic[1]), 4)
@@ -293,7 +294,8 @@ propersummary <- function(arocobj, marker, resultcol, healthytag, covariate){
     k <- paste0('>F-statistic: ', f1, ' on ' , f2, ' and ', f3, ' DF')
     l <- paste0('>p-value:',pvalue1)
     
-    res <- c(res,sepline,g0,g,h,k,l)
+
+    res <- HTML(paste(res,sepline,g0,g,h,k,l,'', sep = '<br/>'))
   } 
   
   res
@@ -332,7 +334,7 @@ summaryCompAroc <- function(arocobj, pooledobj, cov){
   k <- paste0('>F-statistic: ', f1, ' on ' , f2, ' and ', f3, ' DF')
   l <- paste0('>p-value:',pvalue1)
   
-  res <- c(sepline,intro,sepline, covID, auccomp1, auccomp2,sepline,g0,g,h,k,l)
+  res <- HTML(paste(sepline,intro,sepline, covID, auccomp1, auccomp2,sepline,g0,g,h,k,l,'',sep='<br/>'))
   
   res
 }
@@ -357,26 +359,28 @@ summaryCOmp2ROC <- function(comp2rocobj, name1, name2){
                    signif(comp2rocobj[['ICUBDiff']],4), ')')
   
   
-  res <- c(sepline,intro,sepline,auc1,auc2, testdiff,zstat,pval, global)
+  res <- HTML(paste(sepline,intro,sepline,auc1,auc2, testdiff,zstat,pval, global,'',sep = '<br/>'))
   res
 }
 
 
 
-classicsummary <- function(curve, method, marker,resultcol){
+classicsummary <- function(curve, method, marker, resultcol) {
+  aucv <- NULL
   sepline <- '-----'
   intro <- 'Report for Classic ROC Module'
-  methodcar <- paste0('Method used: ',method )
+  methodcar <- paste0('Method used: ', method)
   markv <- paste0('Marker: ', marker)
   restulv <- paste0('Result Column: ', resultcol)
   
-  if (is.null(curve[['auc']])){
-    aucv <- paste0('AUC: ', signif(curve[['AUC']],4))
-    }else {aucv <- paste0('AUC: ', signif(curve[['auc']],4))}
+  if (is.null(curve[['auc']])) {
+    aucv <- paste0('AUC: ', signif(curve[['AUC']]['est'], 4))
+  } else {
+    aucv <- paste0('AUC: ', signif(curve[['auc']], 4))
+  }
   
   
-  
-  res <- c(sepline, intro, sepline,methodcar, markv, restulv, aucv )
+  res <- HTML(paste(sepline, intro, sepline,methodcar, markv, restulv, aucv,'', sep = '<br/>' ))
 }
 
 updateMyReactive <- function(session, newvalue, oldvalues) {
@@ -406,5 +410,18 @@ seedifferent <- function(session, stringlist, varlist){
   }
   res
 }
+
+roc.curves.plot2 <-
+  function(sim1.curve,sim2.curve,mod1,mod2) {
+    
+    # draw the original curve
+    res <- {plot(sim1.curve,col="blue",type="o",pch=16,lwd=2,yaxs="i",xaxs="i")
+    plot(sim2.curve,col="red",type="o",pch=20, lwd=2,lty=3, add=TRUE)
+    abline(0,1,col="gray",lty=2)
+    legend(0.7,0.7,c(mod1,mod2),pch=c(16,20),col=c("blue","red"),lwd=2,lty=c(1,3), bty = "n",box.lty=0)
+    mtext(paste("Empirical ROC curves"),line=3)}
+    
+    res
+  }
 
 

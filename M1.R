@@ -3,10 +3,9 @@ library('shiny')
 observeEvent(input$sampledata, {
   data('endosim')
   loadedData(endosim)
-  textobj(newreport(
-    textobj,
-    tags$div('Using the Sample Data provided by RealROC.')
-  ))
+  
+  textobj(paste(textobj(),'Using the Sample Data provided by RealROC.',' ', sep='<br/>'))
+  
 })
 
 observe({

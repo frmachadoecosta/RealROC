@@ -7,16 +7,15 @@ options(shiny.sanitize.errors = TRUE)
 shinyUI(
   navbarPage(
     'RealROC',
-    theme = shinytheme("sandstone"),
+    theme = shinytheme("flatly"),
     
     
     tabPanel(title = '1. Import Data',
-             
              # Sidebar
              sidebarLayout(
                sidebarPanel(
-                 fileInput('main', 'Input file', multiple = FALSE,
-                           accept = ".csv"),
+                 fileInput('main', 'Input file', multiple = FALSE, buttonLabel = "Choose File",
+                           accept = c(".csv", ".xls", ".xlsx")),
                  
                  h4('.csv options'),
                  checkboxInput("header", "Header", TRUE),
@@ -96,7 +95,7 @@ shinyUI(
                ),
                mainPanel(tabsetPanel(
                  tabPanel('Curve Plot', plotOutput('roccurve')%>% 
-                            withSpinner(color = 'khaki',
+                            withSpinner(color = 'lightseagreen',
                                         type = getOption("spinner.type", default = 5))),
                  tabPanel('Population Distribution', plotOutput('classic_density'))
                ))
@@ -124,7 +123,7 @@ shinyUI(
                ),
                mainPanel(tabsetPanel(
                  tabPanel('AROC Curve', plotOutput('aroc')%>% 
-                            withSpinner(color = 'khaki',
+                            withSpinner(color = 'lightseagreen',
                                         type = getOption("spinner.type", default = 5))),
                  tabPanel('Population Distribution', plotOutput('aroc_density'))
                ))
@@ -140,7 +139,7 @@ shinyUI(
                    actionButton('compOnAROC', 'See Comparison')
                  )
                ),
-               mainPanel(plotOutput('AROCcompplot') %>% withSpinner(color = 'khaki',
+               mainPanel(plotOutput('AROCcompplot') %>% withSpinner(color = 'lightseagreen',
                                                                type = getOption("spinner.type", default = 5)))
              )),
     

@@ -1,13 +1,14 @@
 library('shiny')
 
 #Comp Module
+curveboot <- reactiveVal(0)
 
-output$AROCcompplot <- renderPlot(NULL)
-
-observeEvent(input$compOnAROC, {
-  if (input$comptype == 'AROC') {
-    try({
-      AROCobj <- gene_aroc_analysis(
+AROCobj <- eventReactive(input$compOnAROC, {
+  validate(need(input$comptype == 'AROC',''))
+  isolate(
+    try(
+      if (input$comptype == 'AROC') {
+      gene_aroc_analysis(
         loadedData(),
         input$marker4,
         input$resultcol4,
@@ -15,9 +16,15 @@ observeEvent(input$compOnAROC, {
         as.integer(input$healthy_pop4),
         aroc_type = 'Semiparametric'
       )
-      
-      
-      polROCobj <- autopooled(
+    }))
+})
+
+polROCobj <- eventReactive(input$compOnAROC,{
+  validate(need(input$comptype == 'AROC',''))
+  isolate(
+    try(
+    if (input$comptype == 'AROC') {
+      autopooled(
         loadedData(),
         input$marker4,
         input$resultcol4,
@@ -25,38 +32,24 @@ observeEvent(input$compOnAROC, {
         as.integer(input$disease_pop4),
         type = 'Pooled Empirical'
       )
-      
-      #report
-      toreportcomp <-  summaryCompAroc(AROCobj, polROCobj, input$cov4)
-      for (line in toreportcomp) {
-        textobj(newreport(textobj, tags$div(line)))
-      }
-      
-    })
-    comptitle <-
-      paste0('ROC adjustment Comparison for ', input$cov4)
-    output$AROCcompplot <-
-      renderPlot({
-        loadfunc()
-        compAROC_ggplot(AROCobj, polROCobj, comptitle, 'AROC', 'ROC')
-      })
-    
-  } else {
+    }))
+})
+
+
+comp2rocobj <- eventReactive(input$compOnAROC,{
+  validate(need(input$comptype == 'Comp2ROC',''))
+  isolate(
     try({
+    if (input$comptype == 'Comp2ROC'){
       tempvar <- loadedData()
       templist <- split(tempvar, tempvar[input$cov4])
-      print(str(templist))
+      #print(str(templist))
       
       binary1 <- templist[[1]]
       binary1 <- binary1[, c(input$marker4, input$resultcol4)]
       
       binary2 <- templist[[2]]
       binary2 <- binary2[, c(input$marker4, input$resultcol4)]
-      
-      
-      
-      #print(head(binary1))
-      #print(head(binary2))
       
       datafromfunc <-
         comp_converter(binary1,
@@ -81,33 +74,86 @@ observeEvent(input$compOnAROC, {
       sim1.curve = performance(sim1.pred, "tpr", "fpr")
       sim2.curve = performance(sim2.pred, "tpr", "fpr")
       
-      roc.curves.plot(sim1.curve,
-                      sim2.curve,
-                      mod1 = moda1,
-                      mod2 = moda2)
-      res <-
-        roc.curves.boot(datafromfunc, 100, 0.05, name = 'CRIB_sex_ind', "CRIBM", "CRIBF", FALSE)
       
-      toreportcomp <-  summaryCOmp2ROC(res, name1, name2)
-      for (line in toreportcomp) {
-        textobj(newreport(textobj, tags$div(line)))
-      }
+      curveboot(roc.curves.boot(datafromfunc, 100, 0.05, name = 'CRIB_sex_ind', "CRIBM", "CRIBF", FALSE))
       
-    })
+      c(sim1.curve,
+        sim2.curve,
+        mod1 = moda1,
+        mod2 = moda2)
     
-    
-    output$AROCcompplot <-
-      
-      renderPlot({
-        roc.curves.plot(sim1.curve,
-                        sim2.curve,
-                        mod1 = moda1,
-                        mod2 = moda2)
-      })
-    
-  }
+    }}))
+})
+
+
+AROCplot <- eventReactive(input$compOnAROC,{
+  validate(need(input$compOnAROC, ''))
+
+  comptitle <-isolate(
+    paste0('ROC adjustment Comparison for ', input$cov4))
   
-  
+  compAROC_ggplot(AROCobj(), polROCobj(), comptitle, 'AROC', 'ROC')
+  })
+
+
+Comp2Plot <- eventReactive(input$compOnAROC,{
+  validate(need(input$compOnAROC, ''))
+  tempcom <- isolate(comp2rocobj())
+  roc.curves.plot2(tempcom[[1]],tempcom[[2]],tempcom[[3]],tempcom[[4]])
+})
+
+
+output$AROCcompplot <- renderPlot({
+  validate(need(input$compOnAROC,''))
+  isolate({
+    if (input$comptype == 'AROC'){
+      AROCplot()
+      
+      
+    } else{
+      Comp2Plot()
+    }
+  })
   
 })
+
+
+#reports
+
+toreportcomp <- eventReactive(AROCobj(),{
+  if (input$comptype == 'AROC'){
+    try(summaryCompAroc(AROCobj(), polROCobj(), input$cov4))
+  }
+})
+
+toreportcomp2roc <-eventReactive(curveboot(), {
+  if (input$comptype == 'Comp2ROC') {
+    
+    tempvar <- loadedData()
+    templist <- split(tempvar, tempvar[input$cov4])
+    name1 <- names(templist)[1]
+    name2 <- names(templist)[2]
+    
+    
+    summaryCOmp2ROC(curveboot(), name1, name2)
+  }
+})
+
+
+observeEvent(toreportcomp2roc(),{
+  if (class(toreportcomp2roc())!="try-error"){
+  textobj(paste0(textobj(), toreportcomp2roc()))
+    }
+  
+})
+
+
+observeEvent(toreportcomp(),{
+  if (class(toreportcomp())!="try-error"){
+      textobj(paste0(textobj(), toreportcomp()))
+    }
+  
+})
+
+
 

@@ -1,39 +1,53 @@
 library('shiny')
 
-output$roccurve <- renderPlot(NULL)
 
-observeEvent(input$gene_classic, {
+roccurve <- eventReactive(input$gene_classic, {
+  isolate(
   try({
-    roccurve <- do_classicroc(
-      loadedData(),
-      input$marker2,
-      input$resultcol2,
-      as.integer(input$healthy_pop2),
-      as.integer(input$disease_pop2),
-      input$classicurve_type
-    )
-    
-    classicrep <-
-      classicsummary(roccurve,
-                     input$classicurve_type2,
-                     input$marker2,
-                     input$resultcol2)
-    for (line in classicrep) {
-      textobj(newreport(textobj, tags$div(line)))
-    }
-    
-  })
-  
-  
-  output$roccurve <- renderPlot({
-    plot(roccurve)
-  })
-  
-  
+    do_classicroc(
+    loadedData(),
+    input$marker2,
+    input$resultcol2,
+    as.integer(input$healthy_pop2),
+    as.integer(input$disease_pop2),
+    input$classicurve_type
+  )}))
 })
 
+
+
+classicrep <- eventReactive(roccurve(), {
+  isolate(
+    try({
+      classicsummary(
+      roccurve(),
+      input$classicurve_type,
+      input$marker2,
+      input$resultcol2)
+      }
+    )
+  )
+})
+
+
+observeEvent(classicrep(), {
+  if (class(classicrep())!="try-error"){
+    textobj(paste0(textobj(), classicrep()))
+  }
+
+})
+
+
+output$roccurve <- renderPlot({
+  plot(roccurve())
+})
+
+
+
+
 observeEvent(input$gene_classic, {
-  isolate({ #makes only respond to Action Button
+  isolate({
+    #makes only respond to Action Button
     tempmarker <- input$marker2
     tempresult <- input$resultcol2
   })
