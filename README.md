@@ -7,7 +7,7 @@ Welcome to **RealROC**! This app helps you generate adjusted ROC curves using se
 This section is designed to help new users navigate the app and aid them in performing the best analysis for their purposes.
 
 ### "What do I need to start?"
-Nothing! This application needs no prior material to use, a working understating of ROC and AROC curves can be helpful but you can just start and then checkback to this section and understand what you did.
+Nothing! This application needs no prior material to use, a working understating of ROC and AROC curves can be helpful but you can just start and then check back to this section and understand what you did.
 
 <details>
 <summary>What are ROC curves?</summary>

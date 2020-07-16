@@ -8,19 +8,32 @@ observeEvent(input$sampledata, {
   
 })
 
+listentofile <- reactive({list(input$main, input$sep, input$quote, input$header)})
+
+mydata <- eventReactive(listentofile(),{
+  req(input$main$datapath)
+  read.csv(
+    # initialize reactiveVal
+    input$main$datapath,
+    header = input$header,
+    sep = input$sep,
+    quote = input$quote
+  )
+})
+
+observeEvent(mydata(),{
+  loadedData(mydata())
+})
+
+
 observe({
   req(input$main$datapath) # make sure variable isn't empty
   try({
     if (file_ext(input$main$datapath) == 'csv') {
       loadedData(
-        read.csv(
-          # initialize reactiveVal
-          input$main$datapath,
-          header = input$header,
-          sep = input$sep,
-          quote = input$quote
+          mydata()
         )
-      )
+      
     } else {
       loadedData(read_excel(input$main$datapath,
                             sheet = input$sheetId))

@@ -5,16 +5,36 @@ library(shinycssloaders)
 options(shiny.sanitize.errors = TRUE)
 
 shinyUI(
+  tagList(
+    tags$head(tags$style(HTML("
+                           .navbar-nav {
+                           float: none !important;
+                           }
+                           .navbar-nav > li:nth-child(7) { 
+                           float: right;
+                           right: 0px;
+
+                           }
+                           .navbar-nav > li:nth-child(6) {
+                           float: right;
+                           right: 150px;
+                           }
+                           "))),
   navbarPage(
     'RealROC',
     theme = shinytheme("flatly"),
-    
-    
+
     tabPanel(title = '1. Import Data',
              # Sidebar
+
+             style = 'overflow:auto;
+             max-height: 90vh;
+             overflow-x:hidden;
+             ',
+             
              sidebarLayout(
                sidebarPanel(
-                 fileInput('main', 'Input file', multiple = FALSE, buttonLabel = "Choose File",
+                 fileInput('main', '', multiple = FALSE, buttonLabel = "Choose File",
                            accept = c(".csv", ".xls", ".xlsx")),
                  
                  h4('.csv options'),
@@ -62,14 +82,16 @@ shinyUI(
                
                # Main Panel
                mainPanel(
-                 p(
-                   HTML(
-                     "<br><A HREF=\"javascript:history.go(0)\">Reset all inputs</A>"
-                   ),
-                   style = "position:absolute;top: 0px;right:1em"
-                 ),
-                 tabsetPanel(tabPanel('Table', dataTableOutput('filetable')))
-               )
+                 #p(
+                #   HTML(
+                #     "<br><A HREF=\"javascript:history.go(0)\">Reset all inputs</A>"
+                #   ),
+                #  style = "position:absolute;top: 0px;right:1em"
+                # ),
+                 tabsetPanel(
+                   tabPanel('Table', dataTableOutput('filetable'))
+                   )
+                 )
              )),
     
     tabPanel(title = '2. Classic ROC',
@@ -93,11 +115,15 @@ shinyUI(
                  actionButton('gene_classic', "Plot ROC")
                  
                ),
-               mainPanel(tabsetPanel(
-                 tabPanel('Curve Plot', plotOutput('roccurve')%>% 
-                            withSpinner(color = 'lightseagreen',
-                                        type = getOption("spinner.type", default = 5))),
-                 tabPanel('Population Distribution', plotOutput('classic_density'))
+               mainPanel(
+                 style ="width: 70vh;",
+                 
+                 tabsetPanel(
+                   tabPanel('Curve Plot', plotOutput('roccurve')%>% 
+                              withSpinner(color = 'lightseagreen',
+                                          type = getOption("spinner.type", default = 5))),
+                   
+                   tabPanel('Population Distribution', plotOutput('classic_density'))
                ))
              )),
     
@@ -121,7 +147,9 @@ shinyUI(
                  
                  actionButton('gene_aroc', 'Plot AROC')
                ),
-               mainPanel(tabsetPanel(
+               mainPanel(
+                 style ="width: 70vh;",
+                 tabsetPanel(
                  tabPanel('AROC Curve', plotOutput('aroc')%>% 
                             withSpinner(color = 'lightseagreen',
                                         type = getOption("spinner.type", default = 5))),
@@ -139,7 +167,9 @@ shinyUI(
                    actionButton('compOnAROC', 'See Comparison')
                  )
                ),
-               mainPanel(plotOutput('AROCcompplot') %>% withSpinner(color = 'lightseagreen',
+               mainPanel(
+                 style ="width: 70vh;",
+                 plotOutput('AROCcompplot') %>% withSpinner(color = 'lightseagreen',
                                                                type = getOption("spinner.type", default = 5)))
              )),
     
@@ -168,4 +198,7 @@ shinyUI(
       style = 'overflow-y:scroll; max-height: 90vh'
     )
   )
+)
+
+
 )

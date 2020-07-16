@@ -9,7 +9,7 @@ shinyServer(function(input, output, session) {
   
   listentoDataInputs <-
     reactive({
-      list(input$main, input$sampledata)
+      list(input$main, input$sampledata, loadedData())
     })
   
   textobj <- reactiveVal('')
