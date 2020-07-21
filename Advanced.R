@@ -14,6 +14,20 @@ observeEvent(listentoDataInputs(),{
   })
 })
 
+observeEvent(listentoDataInputs(),{
+  output$advancedfactor <- renderUI({
+    tagList(
+      selectInput(
+        'factorcolumn',
+        'Force Factor Column',
+        choices = names(loadedData())
+      ),
+      actionButton('factorchange', 'Change column to factor')
+    )
+    
+  })
+})
+
 observeEvent(input$signalchange, {
   try({
     aa <- as.array(input$signalchangecolumn)
@@ -32,3 +46,29 @@ observeEvent(input$signalchange, {
     
   })
 })
+
+observeEvent(input$factorchange,{
+  try({
+    aa <- as.array(input$factorcolumn)
+    tmp <- loadedData()
+    
+    #print(head(tmp[[aa]]))
+    #print(typeof(tmp[[aa]]))
+    
+    tmp[[aa]] <- as.factor(tmp[[aa]])
+    
+    #print(head(tmp[aa]))
+    loadedData(tmp) # update reactiveVal
+    
+    
+    changetext <- isolate(paste0(
+      input$factorcolumn, ' changed to factor variable sucessfully'
+    ))
+    
+    output$signalchangeoutput <- renderText(changetext)
+    
+  })
+})
+
+
+

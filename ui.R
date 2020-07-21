@@ -188,7 +188,8 @@ shinyUI(
     
     tabPanel(title = 'Advanced',
              sidebarLayout(sidebarPanel(
-               uiOutput('advancedsignalchange')
+               uiOutput('advancedsignalchange'),
+               uiOutput('advancedfactor')
              ),
              mainPanel(textOutput('signalchangeoutput')))),
     
