@@ -12,9 +12,7 @@ observeEvent(listentoDataInputs(),{
     )
     
   })
-})
 
-observeEvent(listentoDataInputs(),{
   output$advancedfactor <- renderUI({
     tagList(
       selectInput(
@@ -26,7 +24,24 @@ observeEvent(listentoDataInputs(),{
     )
     
   })
+
+
+  output$advancedlog <- renderUI({
+    tagList(
+      selectInput(
+        'logcolumn',
+        'Log values',
+        choices = names(loadedData())
+      ),
+      actionButton('logchange', 'Log column values')
+    )
+    
+  })
+
+  
 })
+
+
 
 observeEvent(input$signalchange, {
   try({
@@ -69,6 +84,26 @@ observeEvent(input$factorchange,{
     
   })
 })
+
+observeEvent(input$logchange,{
+  try({
+    aa <- as.array(input$logcolumn)
+    tmp <- loadedData()
+    
+    
+    tmp[[aa]] <- log(tmp[[aa]])
+    
+    loadedData(tmp) 
+    
+    changetext <- isolate(paste0(
+      input$logcolumn, ' was logged sucessfully'
+    ))
+    
+    output$signalchangeoutput <- renderText(changetext)
+    
+  })
+})
+
 
 
 

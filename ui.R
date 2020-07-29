@@ -189,7 +189,12 @@ shinyUI(
     tabPanel(title = 'Advanced',
              sidebarLayout(sidebarPanel(
                uiOutput('advancedsignalchange'),
-               uiOutput('advancedfactor')
+               HTML('<br>'),
+               uiOutput('advancedfactor'),
+               HTML('<br>'),
+               uiOutput('advancedlog'),
+               #HTML('<br>'),
+               #actionButton('advancedNA', label = 'Remove NA values')
              ),
              mainPanel(textOutput('signalchangeoutput')))),
     
