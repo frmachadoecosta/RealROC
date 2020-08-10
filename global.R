@@ -85,7 +85,7 @@ gene_aroc_analysis <- function(data, testcol, resultcol, covcol, result_tag, aro
   aroc_analysis
 }
 aroc_density_builder <- function(data,testcol,resultcol,covcol,color1=3,color2=2){
-  data <- specnaomit(testcol, resultcol,data)  
+  data <- specnaomit(covcol, testcol, data)
   
   resultcolfactor <- as.factor(data[[resultcol]])
   
