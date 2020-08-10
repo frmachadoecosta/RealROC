@@ -16,7 +16,7 @@ do_classicroc <- function(data,testcol,resultcol,healthyRes,diseaseRes,type){
 
 autopooled <- function(data,testcol,resultcol,healthyRes,diseaseRes,type){
   #missing NA treatment
-  
+  data <- specnaomit(testcol, resultcol, data)  
   
   positiveResIndex <- data[[resultcol]]==healthyRes 
   results <- data[[testcol]]
@@ -49,6 +49,7 @@ specnaomit <- function(col1, col2, df) {
 
 
 density_builder <- function(data,testcol,resultcol,color1=3,color2=2){
+  data <- specnaomit(testcol, resultcol, data)  
   
   sm::sm.density.compare(data[[testcol]],data[[resultcol]], 
                          col=c(color1,color2), xlab=testcol)
@@ -84,6 +85,8 @@ gene_aroc_analysis <- function(data, testcol, resultcol, covcol, result_tag, aro
   aroc_analysis
 }
 aroc_density_builder <- function(data,testcol,resultcol,covcol,color1=3,color2=2){
+  data <- specnaomit(testcol, resultcol,data)  
+  
   resultcolfactor <- as.factor(data[[resultcol]])
   
   if (is.factor(data[[covcol]])){
