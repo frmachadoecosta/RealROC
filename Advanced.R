@@ -93,6 +93,7 @@ observeEvent(input$logchange,{
     
     tmp[[aa]] <- log(tmp[[aa]])
     
+    tmp <- tmp[!is.infinite(rowSums(tmp)),]
     loadedData(tmp) 
     
     changetext <- isolate(paste0(
