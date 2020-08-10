@@ -63,16 +63,16 @@ shinyUI(
                    ),
                    selected = '"'
                  ),
-                 HTML('<br>'),
-                 h4('.xls/.xlsx options'),
+                 #HTML('<br>'),
+                 #h4('.xls/.xlsx options'),
                  
-                 numericInput(
-                   'sheetId',
-                   'Sheet',
-                   value = 1,
-                   min = 1,
-                   width = '50%'
-                 ),
+                 #numericInput(
+                #   'sheetId',
+                #   'Sheet',
+                #   value = 1,
+                #   min = 1,
+                #   width = '50%'
+                # ),
                  
                  HTML('<br>'),
                  h4('Try app with no data import'),
